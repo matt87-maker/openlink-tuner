@@ -1,0 +1,129 @@
+# XcodeGen spec for OpenLink: Mac app, iPhone app, command-line tool, shared library.
+# Regenerate the project with:  cd src && xcodegen generate
+name: OpenLink
+options:
+  bundleIdPrefix: io.github.matt87-maker
+  deploymentTarget:
+    macOS: "14.0"
+    iOS: "17.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+
+settingGroups:
+  macSigning:
+    # Sign to run locally. Pick your Team in Signing & Capabilities to sign with your Apple ID.
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "-"
+    # No sandbox / hardened runtime: the app loads its bundled libftdi and talks to the
+    # Link USB cable directly.
+    ENABLE_HARDENED_RUNTIME: NO
+    ARCHS: arm64            # Apple Silicon (the bundled USB driver libraries are arm64)
+
+targets:
+  OpenLinkKit:
+    type: library.static
+    platform: macOS
+    sources:
+      - path: Sources/OpenLinkKit
+    settings:
+      groups: [macSigning]
+      base:
+        PRODUCT_NAME: OpenLinkKit
+
+  OpenLink Tuner:
+    type: application
+    platform: macOS
+    sources:
+      - path: App
+      - path: Shared
+      - path: Sources/OpenLinkKit      # same files as the OpenLinkKit target, compiled into the app directly
+      - path: Resources/catalog.json
+        buildPhase: resources
+    dependencies:
+      - sdk: IOKit.framework
+      - sdk: SystemConfiguration.framework
+      - sdk: Charts.framework
+    settings:
+      groups: [macSigning]
+      base:
+        PRODUCT_NAME: OpenLink Tuner
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.matt87-maker.OpenLinkTuner
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        COMBINE_HIDPI_IMAGES: YES
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/../Frameworks"
+    postBuildScripts:
+      - name: Embed USB driver (libftdi + libusb)
+        script: '"${SRCROOT}/scripts/embed-libftdi.sh"'
+        basedOnDependencyAnalysis: false
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleName: OpenLink Tuner
+        CFBundleDisplayName: OpenLink Tuner
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSApplicationCategoryType: public.app-category.utilities
+        NSHumanReadableCopyright: Open source (MIT). Not affiliated with Link Engine Management Ltd.
+        NSHighResolutionCapable: true
+        NSLocalNetworkUsageDescription: OpenLink Tuner shares live ECU data, logs and your tune with OpenLink Mobile on your iPhone over your local network.
+        NSBonjourServices: [_openlink._tcp]
+        CFBundleDocumentTypes:
+          - CFBundleTypeName: Link ECU Tune
+            CFBundleTypeRole: Editor
+            LSItemContentTypes: [public.data]
+            CFBundleTypeExtensions: [pclx, pcl5]
+    scheme:
+      testTargets: []
+
+  OpenLink Mobile:
+    type: application
+    platform: iOS
+    sources:
+      - path: iOS/OpenLinkMobile
+      - path: Shared                   # same Wi-Fi link code as the Mac app
+    settings:
+      base:
+        PRODUCT_NAME: OpenLink Mobile
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.matt87-maker.OpenLinkMobile
+        TARGETED_DEVICE_FAMILY: "1,2"
+        # Automatic signing: choose your Team (your Apple ID) in Signing & Capabilities
+        # to install on your iPhone. The Simulator needs no team.
+        CODE_SIGN_STYLE: Automatic
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    info:
+      path: iOS/OpenLinkMobile/Info.plist
+      properties:
+        CFBundleDisplayName: OpenLink
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
+        UISupportedInterfaceOrientations~ipad: [UIInterfaceOrientationPortrait, UIInterfaceOrientationPortraitUpsideDown, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
+        NSLocalNetworkUsageDescription: OpenLink finds your Mac on the local network to show live ECU data, logs and your tune.
+        NSBonjourServices: [_openlink._tcp]
+        UIUserInterfaceStyle: Dark
+    scheme:
+      testTargets: []
+
+  openlink:
+    type: tool
+    platform: macOS
+    sources:
+      - path: Sources/openlink
+    dependencies:
+      - target: OpenLinkKit
+    settings:
+      groups: [macSigning]
+      base:
+        PRODUCT_NAME: openlink
+    postBuildScripts:
+      - name: Copy catalog next to the tool
+        script: cp "${SRCROOT}/Resources/catalog.json" "${BUILT_PRODUCTS_DIR}/catalog.json"
+        inputFiles: ["$(SRCROOT)/Resources/catalog.json"]
+        outputFiles: ["$(BUILT_PRODUCTS_DIR)/catalog.json"]

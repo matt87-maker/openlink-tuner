@@ -1,0 +1,23 @@
+# Allow-list: only these top-level items are part of the public repo.
+/*
+!/.gitignore
+!/README.md
+!/LICENSE
+!/THIRD_PARTY_NOTICES.md
+!/docs/
+!/screenshots/
+!/src/
+
+# never commit tunes, logs or build output
+*.pclx
+*.pcl5
+*.lfp
+*.csv
+*.log
+*.ipa
+*.app
+.DS_Store
+xcuserdata/
+*.xcresult
+src/.build/
+src/build/

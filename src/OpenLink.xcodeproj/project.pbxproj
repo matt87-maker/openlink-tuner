@@ -1,0 +1,862 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0782F93440AF330BAFBE466F /* TuneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0007E6A8013EACB5625ECC7 /* TuneView.swift */; };
+		130D0A3CE1F8530940A3B44F /* TuneExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DB865FAC2623645AC6A547 /* TuneExport.swift */; };
+		138843DAFFF53A5508041A18 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06962B4A559DFEC107B93B84 /* main.swift */; };
+		14D86534225F6442D579CE20 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD415922BB0A886416DAC1E7 /* ContentView.swift */; };
+		17D995F438C1816969915D32 /* TuneCrypt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 682F6DBF6B9C5505596F3336 /* TuneCrypt.swift */; };
+		1A220B49A4A62C83358EAB62 /* OpenLinkTunerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855CB9FC81E6552A4B2DF637 /* OpenLinkTunerApp.swift */; };
+		1DE0519DC60F4ED970AFBCE0 /* FTDI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A3ECEDB1A43E9AAE2346773 /* FTDI.swift */; };
+		2396A6973E6414A1806D2C02 /* LiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01B12825F699BC82279634F /* LiveView.swift */; };
+		2408E974B7A99E257340BCC2 /* TuneCrypt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 682F6DBF6B9C5505596F3336 /* TuneCrypt.swift */; };
+		350EBE07DD75C5EE1CE191E6 /* PhoneServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A535F32D6ED640B0F2C6A2 /* PhoneServer.swift */; };
+		43E9F985FB66C2C99B7FD63A /* TuneDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729A39F11882E236EFB816D3 /* TuneDiff.swift */; };
+		4844096503985E1D96E56ED9 /* TableEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E054763C3E29E7EE6C9C1230 /* TableEditor.swift */; };
+		4F8FA3A34C9D41ABA67BBB9B /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F7DA98D7D40A46F8D0D7836 /* Charts.framework */; };
+		501ADC00A32B608C2E15E651 /* OpenLinkMobileApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B73214C32BBBBB561495755 /* OpenLinkMobileApp.swift */; };
+		59ECFE1271C44EEA6BE70EA5 /* EcuTuneReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E323EB90AC2FFBA708169544 /* EcuTuneReader.swift */; };
+		5D7B0CC63578C63E3EA0691C /* TuneAxes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074F15DD60EED69E6A492258 /* TuneAxes.swift */; };
+		6836090ECA1C4ECC7138B8CA /* LogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1BAF7E8E8399225F6D8A53 /* LogStore.swift */; };
+		6DCE4F7DF6166472E56A2620 /* LinkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0ACD56EAE0308FF807B1218 /* LinkClient.swift */; };
+		6F74288E66F30D76594D05F7 /* TuneAxes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074F15DD60EED69E6A492258 /* TuneAxes.swift */; };
+		70F109F9F8C953ED1F10AD14 /* LinkWire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FAC22312B770B0CE065D55 /* LinkWire.swift */; };
+		7592FB31DE587B73AD283680 /* TuneFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C08821B419CCF3BAD3463 /* TuneFile.swift */; };
+		7EEBDFCD2AFFC158B60C204B /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5CBFCCCB2F302576BD5A8C /* DashboardView.swift */; };
+		886D5756F5BE07961C490134 /* LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10824946071D44DAF9CD823 /* LogsView.swift */; };
+		89E8B8C7DCDD8FD337691692 /* LiveEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 813488E083C25253BF821161 /* LiveEngine.swift */; };
+		8D3353E4F71C97A8B40C2251 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7421CDF13623311671BA7295 /* IOKit.framework */; };
+		9832D97E45351CCF0DC2AA8A /* PhoneLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE34DA03DFF052F78BDB7B23 /* PhoneLink.swift */; };
+		A21F2D58C0FDE849E61FABF5 /* TuneFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C08821B419CCF3BAD3463 /* TuneFile.swift */; };
+		ACDA4A74DA4F717D71B87A9E /* catalog.json in Resources */ = {isa = PBXBuildFile; fileRef = 770C3E01C4E1638712528DC6 /* catalog.json */; };
+		B825D687B3693B3D2A6BBF45 /* LinkWire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FAC22312B770B0CE065D55 /* LinkWire.swift */; };
+		C32F5717B262DFF5A2046F88 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7CCC212F242B978CA11AF218 /* Assets.xcassets */; };
+		C830CB604BB46011B460EC76 /* TuneDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729A39F11882E236EFB816D3 /* TuneDiff.swift */; };
+		CCDE96D79D7537C84F67BBF6 /* PhoneLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE34DA03DFF052F78BDB7B23 /* PhoneLink.swift */; };
+		CEF000E554DA8C7882087938 /* EcuManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC31586564EE3D25B50EE2 /* EcuManager.swift */; };
+		D1F8CCF82D4A41801E60FF67 /* Catalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EEAAF9B337113C51E83D582 /* Catalog.swift */; };
+		D2987E55F0E27D09D23074C9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 814A12B83355F1F8E4E68843 /* Assets.xcassets */; };
+		D4ED84CC42460C200CD8D696 /* UsbWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66E085C5B6CD2CB9BB7C0F5 /* UsbWatcher.swift */; };
+		DC1D640DE388BC8560537233 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6365E1F52635728636DDE0A /* SystemConfiguration.framework */; };
+		DF597F400FED2DBD267E93C0 /* TuneExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DB865FAC2623645AC6A547 /* TuneExport.swift */; };
+		E23CD1EB9EEC797229B47405 /* libOpenLinkKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D62C1AB1E1A97346B0BAFEC /* libOpenLinkKit.a */; };
+		F07F7E4C3ECDEFF3170D2AB5 /* Catalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EEAAF9B337113C51E83D582 /* Catalog.swift */; };
+		F9C9BB6110C7D6CC33AA756E /* LinkECU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5975F52B4E987575C62CDF5F /* LinkECU.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		682FA523F3A555FAEBAAE271 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B0B599063B1A74E872359E52 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8C1DD8B2BE93BC5B80EA0108;
+			remoteInfo = OpenLinkKit;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		06962B4A559DFEC107B93B84 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		074F15DD60EED69E6A492258 /* TuneAxes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TuneAxes.swift; sourceTree = "<group>"; };
+		0D1BAF7E8E8399225F6D8A53 /* LogStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogStore.swift; sourceTree = "<group>"; };
+		14DCDD1D8CBD03AE44D50ED7 /* OpenLink Mobile.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "OpenLink Mobile.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1EEAAF9B337113C51E83D582 /* Catalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Catalog.swift; sourceTree = "<group>"; };
+		22FAC22312B770B0CE065D55 /* LinkWire.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkWire.swift; sourceTree = "<group>"; };
+		2B73214C32BBBBB561495755 /* OpenLinkMobileApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenLinkMobileApp.swift; sourceTree = "<group>"; };
+		5975F52B4E987575C62CDF5F /* LinkECU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkECU.swift; sourceTree = "<group>"; };
+		5B5CBFCCCB2F302576BD5A8C /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		65DB865FAC2623645AC6A547 /* TuneExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TuneExport.swift; sourceTree = "<group>"; };
+		682F6DBF6B9C5505596F3336 /* TuneCrypt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TuneCrypt.swift; sourceTree = "<group>"; };
+		6F7DA98D7D40A46F8D0D7836 /* Charts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Charts.framework; path = System/Library/Frameworks/Charts.framework; sourceTree = SDKROOT; };
+		729A39F11882E236EFB816D3 /* TuneDiff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TuneDiff.swift; sourceTree = "<group>"; };
+		7421CDF13623311671BA7295 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		770C3E01C4E1638712528DC6 /* catalog.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = catalog.json; sourceTree = "<group>"; };
+		7CCC212F242B978CA11AF218 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		813488E083C25253BF821161 /* LiveEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveEngine.swift; sourceTree = "<group>"; };
+		814A12B83355F1F8E4E68843 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		855CB9FC81E6552A4B2DF637 /* OpenLinkTunerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenLinkTunerApp.swift; sourceTree = "<group>"; };
+		8A3ECEDB1A43E9AAE2346773 /* FTDI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FTDI.swift; sourceTree = "<group>"; };
+		8B5C08821B419CCF3BAD3463 /* TuneFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TuneFile.swift; sourceTree = "<group>"; };
+		8D62C1AB1E1A97346B0BAFEC /* libOpenLinkKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOpenLinkKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B63D6AC9EC9F84B709975EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		B02BC2B142973E77EBC2A7A2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		C8F37A9F1DD769C2D89A7073 /* openlink */ = {isa = PBXFileReference; includeInIndex = 0; path = openlink; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD415922BB0A886416DAC1E7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		CEEC31586564EE3D25B50EE2 /* EcuManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EcuManager.swift; sourceTree = "<group>"; };
+		D0007E6A8013EACB5625ECC7 /* TuneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TuneView.swift; sourceTree = "<group>"; };
+		D10824946071D44DAF9CD823 /* LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsView.swift; sourceTree = "<group>"; };
+		D6365E1F52635728636DDE0A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		DF62F78C21B5B44E18F70E28 /* OpenLink Tuner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OpenLink Tuner.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E01B12825F699BC82279634F /* LiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveView.swift; sourceTree = "<group>"; };
+		E054763C3E29E7EE6C9C1230 /* TableEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableEditor.swift; sourceTree = "<group>"; };
+		E0ACD56EAE0308FF807B1218 /* LinkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkClient.swift; sourceTree = "<group>"; };
+		E323EB90AC2FFBA708169544 /* EcuTuneReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EcuTuneReader.swift; sourceTree = "<group>"; };
+		E6A535F32D6ED640B0F2C6A2 /* PhoneServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneServer.swift; sourceTree = "<group>"; };
+		F66E085C5B6CD2CB9BB7C0F5 /* UsbWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsbWatcher.swift; sourceTree = "<group>"; };
+		FE34DA03DFF052F78BDB7B23 /* PhoneLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneLink.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		623007265D8D55F84DD709BB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E23CD1EB9EEC797229B47405 /* libOpenLinkKit.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9608501B10267B5835EDC54E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D3353E4F71C97A8B40C2251 /* IOKit.framework in Frameworks */,
+				DC1D640DE388BC8560537233 /* SystemConfiguration.framework in Frameworks */,
+				4F8FA3A34C9D41ABA67BBB9B /* Charts.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		01898A9CFCFAD29C02C1A3CA /* Live */ = {
+			isa = PBXGroup;
+			children = (
+				CEEC31586564EE3D25B50EE2 /* EcuManager.swift */,
+				E323EB90AC2FFBA708169544 /* EcuTuneReader.swift */,
+				8A3ECEDB1A43E9AAE2346773 /* FTDI.swift */,
+				5975F52B4E987575C62CDF5F /* LinkECU.swift */,
+				813488E083C25253BF821161 /* LiveEngine.swift */,
+				E01B12825F699BC82279634F /* LiveView.swift */,
+				0D1BAF7E8E8399225F6D8A53 /* LogStore.swift */,
+				E6A535F32D6ED640B0F2C6A2 /* PhoneServer.swift */,
+				F66E085C5B6CD2CB9BB7C0F5 /* UsbWatcher.swift */,
+			);
+			path = Live;
+			sourceTree = "<group>";
+		};
+		2EF8CADC175531848DB3308F /* OpenLinkMobile */ = {
+			isa = PBXGroup;
+			children = (
+				7CCC212F242B978CA11AF218 /* Assets.xcassets */,
+				5B5CBFCCCB2F302576BD5A8C /* DashboardView.swift */,
+				B02BC2B142973E77EBC2A7A2 /* Info.plist */,
+				E0ACD56EAE0308FF807B1218 /* LinkClient.swift */,
+				D10824946071D44DAF9CD823 /* LogsView.swift */,
+				2B73214C32BBBBB561495755 /* OpenLinkMobileApp.swift */,
+				D0007E6A8013EACB5625ECC7 /* TuneView.swift */,
+			);
+			path = OpenLinkMobile;
+			sourceTree = "<group>";
+		};
+		421506B3588B634654BE4E6D /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				2EF8CADC175531848DB3308F /* OpenLinkMobile */,
+			);
+			path = iOS;
+			sourceTree = "<group>";
+		};
+		4BFD315DCC1905DC5E6C339D /* App */ = {
+			isa = PBXGroup;
+			children = (
+				01898A9CFCFAD29C02C1A3CA /* Live */,
+				814A12B83355F1F8E4E68843 /* Assets.xcassets */,
+				CD415922BB0A886416DAC1E7 /* ContentView.swift */,
+				9B63D6AC9EC9F84B709975EE /* Info.plist */,
+				855CB9FC81E6552A4B2DF637 /* OpenLinkTunerApp.swift */,
+				E054763C3E29E7EE6C9C1230 /* TableEditor.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		5AFAD6C80E7D113CB08BD5A0 /* OpenLinkKit */ = {
+			isa = PBXGroup;
+			children = (
+				1EEAAF9B337113C51E83D582 /* Catalog.swift */,
+				22FAC22312B770B0CE065D55 /* LinkWire.swift */,
+				074F15DD60EED69E6A492258 /* TuneAxes.swift */,
+				682F6DBF6B9C5505596F3336 /* TuneCrypt.swift */,
+				729A39F11882E236EFB816D3 /* TuneDiff.swift */,
+				65DB865FAC2623645AC6A547 /* TuneExport.swift */,
+				8B5C08821B419CCF3BAD3463 /* TuneFile.swift */,
+			);
+			path = OpenLinkKit;
+			sourceTree = "<group>";
+		};
+		5EC63A5EAD9E6BCDD6B58F08 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				770C3E01C4E1638712528DC6 /* catalog.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		60D4D593C86D944554797B6B = {
+			isa = PBXGroup;
+			children = (
+				4BFD315DCC1905DC5E6C339D /* App */,
+				421506B3588B634654BE4E6D /* iOS */,
+				5EC63A5EAD9E6BCDD6B58F08 /* Resources */,
+				F462A7372993BEE3EDC70C76 /* Shared */,
+				656463258925ECAE4432F341 /* Sources */,
+				C2EA6B7A60A6EB7D1E70A407 /* Frameworks */,
+				7B9135050270B85F47D775C4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		656463258925ECAE4432F341 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				92C65DD5394E73CFF6B73922 /* openlink */,
+				5AFAD6C80E7D113CB08BD5A0 /* OpenLinkKit */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		7B9135050270B85F47D775C4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D62C1AB1E1A97346B0BAFEC /* libOpenLinkKit.a */,
+				C8F37A9F1DD769C2D89A7073 /* openlink */,
+				14DCDD1D8CBD03AE44D50ED7 /* OpenLink Mobile.app */,
+				DF62F78C21B5B44E18F70E28 /* OpenLink Tuner.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		92C65DD5394E73CFF6B73922 /* openlink */ = {
+			isa = PBXGroup;
+			children = (
+				06962B4A559DFEC107B93B84 /* main.swift */,
+			);
+			path = openlink;
+			sourceTree = "<group>";
+		};
+		C2EA6B7A60A6EB7D1E70A407 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6F7DA98D7D40A46F8D0D7836 /* Charts.framework */,
+				7421CDF13623311671BA7295 /* IOKit.framework */,
+				D6365E1F52635728636DDE0A /* SystemConfiguration.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F462A7372993BEE3EDC70C76 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				FE34DA03DFF052F78BDB7B23 /* PhoneLink.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		853793753B538DE0585B8C24 /* OpenLink Mobile */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3FB084C856DF9FD3B5BAFCFA /* Build configuration list for PBXNativeTarget "OpenLink Mobile" */;
+			buildPhases = (
+				7F8A8ABB8F7C184FA16A776F /* Sources */,
+				8AEB6A8C4F1B208E3BE41A0D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "OpenLink Mobile";
+			packageProductDependencies = (
+			);
+			productName = "OpenLink Mobile";
+			productReference = 14DCDD1D8CBD03AE44D50ED7 /* OpenLink Mobile.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8C1DD8B2BE93BC5B80EA0108 /* OpenLinkKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 54983C3CDD77DFC62A14FB3C /* Build configuration list for PBXNativeTarget "OpenLinkKit" */;
+			buildPhases = (
+				0B90F06BCC1E4B8ECA0D51CB /* Sources */,
+				25AD8E3679683CDD8E5EB468 /* Copy Swift Objective-C Interface Header */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OpenLinkKit;
+			packageProductDependencies = (
+			);
+			productName = OpenLinkKit;
+			productReference = 8D62C1AB1E1A97346B0BAFEC /* libOpenLinkKit.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		F0CAD23FD10D705B40754E3D /* OpenLink Tuner */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 741C58761F822611C13B055C /* Build configuration list for PBXNativeTarget "OpenLink Tuner" */;
+			buildPhases = (
+				23AE061863E4AC4D39848BD2 /* Sources */,
+				443C0108B161850CE9C616B5 /* Resources */,
+				9608501B10267B5835EDC54E /* Frameworks */,
+				2135ADFC91D791F324E9AFAE /* Embed USB driver (libftdi + libusb) */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "OpenLink Tuner";
+			packageProductDependencies = (
+			);
+			productName = "OpenLink Tuner";
+			productReference = DF62F78C21B5B44E18F70E28 /* OpenLink Tuner.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FC85929C8913CA790E3C67C1 /* openlink */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 23523C2E52DAF875161B211E /* Build configuration list for PBXNativeTarget "openlink" */;
+			buildPhases = (
+				6DF37F9F1DBC997E56255CBC /* Sources */,
+				623007265D8D55F84DD709BB /* Frameworks */,
+				C5D934129D4EBD58DC79DDD1 /* Copy catalog next to the tool */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5121366F7CEBDE8F45671A48 /* PBXTargetDependency */,
+			);
+			name = openlink;
+			packageProductDependencies = (
+			);
+			productName = openlink;
+			productReference = C8F37A9F1DD769C2D89A7073 /* openlink */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B0B599063B1A74E872359E52 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					853793753B538DE0585B8C24 = {
+						ProvisioningStyle = Automatic;
+					};
+					8C1DD8B2BE93BC5B80EA0108 = {
+						ProvisioningStyle = Manual;
+					};
+					F0CAD23FD10D705B40754E3D = {
+						ProvisioningStyle = Manual;
+					};
+					FC85929C8913CA790E3C67C1 = {
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = D8D3498FABC9B41A2EEB9C35 /* Build configuration list for PBXProject "OpenLink" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 60D4D593C86D944554797B6B;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 7B9135050270B85F47D775C4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8C1DD8B2BE93BC5B80EA0108 /* OpenLinkKit */,
+				F0CAD23FD10D705B40754E3D /* OpenLink Tuner */,
+				853793753B538DE0585B8C24 /* OpenLink Mobile */,
+				FC85929C8913CA790E3C67C1 /* openlink */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		443C0108B161850CE9C616B5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2987E55F0E27D09D23074C9 /* Assets.xcassets in Resources */,
+				ACDA4A74DA4F717D71B87A9E /* catalog.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8AEB6A8C4F1B208E3BE41A0D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C32F5717B262DFF5A2046F88 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2135ADFC91D791F324E9AFAE /* Embed USB driver (libftdi + libusb) */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Embed USB driver (libftdi + libusb)";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/scripts/embed-libftdi.sh\"";
+		};
+		25AD8E3679683CDD8E5EB468 /* Copy Swift Objective-C Interface Header */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(DERIVED_SOURCES_DIR)/$(SWIFT_OBJC_INTERFACE_HEADER_NAME)",
+			);
+			name = "Copy Swift Objective-C Interface Header";
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/include/$(PRODUCT_MODULE_NAME)/$(SWIFT_OBJC_INTERFACE_HEADER_NAME)",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "ditto \"${SCRIPT_INPUT_FILE_0}\" \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+		};
+		C5D934129D4EBD58DC79DDD1 /* Copy catalog next to the tool */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Resources/catalog.json",
+			);
+			name = "Copy catalog next to the tool";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/catalog.json",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cp \"${SRCROOT}/Resources/catalog.json\" \"${BUILT_PRODUCTS_DIR}/catalog.json\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0B90F06BCC1E4B8ECA0D51CB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F07F7E4C3ECDEFF3170D2AB5 /* Catalog.swift in Sources */,
+				70F109F9F8C953ED1F10AD14 /* LinkWire.swift in Sources */,
+				5D7B0CC63578C63E3EA0691C /* TuneAxes.swift in Sources */,
+				2408E974B7A99E257340BCC2 /* TuneCrypt.swift in Sources */,
+				C830CB604BB46011B460EC76 /* TuneDiff.swift in Sources */,
+				DF597F400FED2DBD267E93C0 /* TuneExport.swift in Sources */,
+				A21F2D58C0FDE849E61FABF5 /* TuneFile.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		23AE061863E4AC4D39848BD2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1F8CCF82D4A41801E60FF67 /* Catalog.swift in Sources */,
+				14D86534225F6442D579CE20 /* ContentView.swift in Sources */,
+				CEF000E554DA8C7882087938 /* EcuManager.swift in Sources */,
+				59ECFE1271C44EEA6BE70EA5 /* EcuTuneReader.swift in Sources */,
+				1DE0519DC60F4ED970AFBCE0 /* FTDI.swift in Sources */,
+				F9C9BB6110C7D6CC33AA756E /* LinkECU.swift in Sources */,
+				B825D687B3693B3D2A6BBF45 /* LinkWire.swift in Sources */,
+				89E8B8C7DCDD8FD337691692 /* LiveEngine.swift in Sources */,
+				2396A6973E6414A1806D2C02 /* LiveView.swift in Sources */,
+				6836090ECA1C4ECC7138B8CA /* LogStore.swift in Sources */,
+				1A220B49A4A62C83358EAB62 /* OpenLinkTunerApp.swift in Sources */,
+				9832D97E45351CCF0DC2AA8A /* PhoneLink.swift in Sources */,
+				350EBE07DD75C5EE1CE191E6 /* PhoneServer.swift in Sources */,
+				4844096503985E1D96E56ED9 /* TableEditor.swift in Sources */,
+				6F74288E66F30D76594D05F7 /* TuneAxes.swift in Sources */,
+				17D995F438C1816969915D32 /* TuneCrypt.swift in Sources */,
+				43E9F985FB66C2C99B7FD63A /* TuneDiff.swift in Sources */,
+				130D0A3CE1F8530940A3B44F /* TuneExport.swift in Sources */,
+				7592FB31DE587B73AD283680 /* TuneFile.swift in Sources */,
+				D4ED84CC42460C200CD8D696 /* UsbWatcher.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6DF37F9F1DBC997E56255CBC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				138843DAFFF53A5508041A18 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7F8A8ABB8F7C184FA16A776F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7EEBDFCD2AFFC158B60C204B /* DashboardView.swift in Sources */,
+				6DCE4F7DF6166472E56A2620 /* LinkClient.swift in Sources */,
+				886D5756F5BE07961C490134 /* LogsView.swift in Sources */,
+				501ADC00A32B608C2E15E651 /* OpenLinkMobileApp.swift in Sources */,
+				CCDE96D79D7537C84F67BBF6 /* PhoneLink.swift in Sources */,
+				0782F93440AF330BAFBE466F /* TuneView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5121366F7CEBDE8F45671A48 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8C1DD8B2BE93BC5B80EA0108 /* OpenLinkKit */;
+			targetProxy = 682FA523F3A555FAEBAAE271 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		11F244068785746353C2B77D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		1E22D5317D6D6FFF16808C30 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.matt87-maker.openlink";
+				PRODUCT_NAME = openlink;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		2380506B5905C8D67EBA2730 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.matt87-maker.openlink";
+				PRODUCT_NAME = openlink;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		3ED6A5EAEEA7485F0EAB99A3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				INFOPLIST_FILE = App/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.matt87-maker.OpenLinkTuner";
+				PRODUCT_NAME = "OpenLink Tuner";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		6A5C6FBC3A51517B74545B40 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = iOS/OpenLinkMobile/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.matt87-maker.OpenLinkMobile";
+				PRODUCT_NAME = "OpenLink Mobile";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		96DECAF5142D38C609CFAC62 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		B11654F9BE8239B6DF69E514 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.matt87-maker.OpenLinkKit";
+				PRODUCT_NAME = OpenLinkKit;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		E23E8E9CC813EC928D3D6E08 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				INFOPLIST_FILE = App/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.matt87-maker.OpenLinkTuner";
+				PRODUCT_NAME = "OpenLink Tuner";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		ED7052830F77C450E72E7292 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.matt87-maker.OpenLinkKit";
+				PRODUCT_NAME = OpenLinkKit;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		EF2E79C48B57B9A030435306 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = iOS/OpenLinkMobile/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.matt87-maker.OpenLinkMobile";
+				PRODUCT_NAME = "OpenLink Mobile";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		23523C2E52DAF875161B211E /* Build configuration list for PBXNativeTarget "openlink" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E22D5317D6D6FFF16808C30 /* Debug */,
+				2380506B5905C8D67EBA2730 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		3FB084C856DF9FD3B5BAFCFA /* Build configuration list for PBXNativeTarget "OpenLink Mobile" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6A5C6FBC3A51517B74545B40 /* Debug */,
+				EF2E79C48B57B9A030435306 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		54983C3CDD77DFC62A14FB3C /* Build configuration list for PBXNativeTarget "OpenLinkKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ED7052830F77C450E72E7292 /* Debug */,
+				B11654F9BE8239B6DF69E514 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		741C58761F822611C13B055C /* Build configuration list for PBXNativeTarget "OpenLink Tuner" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3ED6A5EAEEA7485F0EAB99A3 /* Debug */,
+				E23E8E9CC813EC928D3D6E08 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D8D3498FABC9B41A2EEB9C35 /* Build configuration list for PBXProject "OpenLink" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				11F244068785746353C2B77D /* Debug */,
+				96DECAF5142D38C609CFAC62 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B0B599063B1A74E872359E52 /* Project object */;
+}
