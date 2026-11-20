@@ -124,6 +124,54 @@ Type codes: `1`, `5` → IEEE float32; `2`, `3`, `8`, `9` → int32; `4`, `7` �
 Integer values are probably in ECU wire units — multiply by the tune's `Multi` and add
 `Offset` (the attributes on each `<D…>` element in a `.pclx`).
 
+## Writing — static analysis only (NOT enabled, never sent)
+
+Everything below comes from reading PCLink's code. **No write has ever been sent to an ECU**;
+OpenLink still refuses `0x2A`, `0x20`, `0x21` and `0x14` in two places.
+
+| What | Command | Payload | Where in PCLink |
+|---|---|---|---|
+| Write one setting / table cell | `0x2A` | 56 bytes: `[DataId u16][cell index u16, 0xFFFF for scalars][value 4 bytes BE]` — float32 bits for float settings, int32 for options (PCLink converts by type at `0x425479`) | builder `0x427A14` |
+| Write a text setting | `0x2A` | `[DataId][FF FF][UTF-16 chars + 00 00]` (count×2+2 bytes) | builder `0x427A80` |
+| Store to permanent memory | `0x20` | none, 1.5 s timeout | `0x427D38`, wrapped at `0x425B08` |
+| Reset/restart ECU | `0x21` | none, 1 s timeout, then 500 ms pause | `0x427D04` |
+| Memory/flash block write | `0x14` | 32-bit address, word count, ≤1 KB | **firmware updater only** (`FWUpdater\G4XProgramFirmware.cpp`) — never needed for tunes |
+
+The single-value write is the mirror image of the read that's confirmed on a real G4X: same
+56-byte payload with the value added. Writing Fuel Table2 cell 22 = 25.5 would be
+`… 09 3F 00 16 41 CC 00 00 …`, and `41 CC 00 00` is exactly what the ECU returned when that
+cell was read.
+
+PCLink's sequence for an edit is: write the value (`0x2A`), then later **Store** (`0x20`)
+to make it permanent. Until stored, a written value most likely lives only in the ECU's RAM
+and is lost at the next power cycle — which makes "write, read back, power cycle" a natural
+safe first test.
+
+### What static analysis can't settle
+
+- **Which address.** PCLink sends parameter reads, writes and store through the address
+  `0x7D` and switches back to `0x5B` afterwards (`0x425503`, `0x425B0C`) — on a newer path it
+  picks when a version number is ≥ 1012 (`0x431794`). A real G4X (fw 6.31.2) answered our reads
+  on `0x5B` with a simpler reply format, and answered an identify sent to `0x7D` with an error.
+  So it isn't certain whether writes for this ECU go to `0x5B` or `0x7D`, or what the reply
+  to a write looks like.
+- **Store semantics** (does `0x20` need anything first; how long it takes on a big tune).
+
+Both are answered by recording real PCLink writing one harmless setting (see below), so
+nothing is guessed on a car.
+
+### Safe path to enabling writes
+
+1. **Capture.** Run PCLink in a Windows VM with the Link cable passed through and record the
+   USB traffic (Wireshark + USBPcap) while changing one harmless setting (e.g. a dash/
+   display value) and pressing Store. Compare with the table above.
+2. **One value, RAM only.** Engine off. Write that one setting, read it back, write the old
+   value back, read again. No store.
+3. **Store.** Confirm `0x20` persists across an ignition cycle.
+4. **Only then**, in the app: off by default; engine must read 0 RPM; full tune backup read
+   first; a preview of every change; only changed values sent; every value read back and
+   compared; any mismatch stops and offers the backup; `0x14` (firmware) permanently blocked.
+
 ## Other
 
 - An 8-byte XOR obfuscation routine exists at `0x47D790` (key at `0x8FBA44`); not yet

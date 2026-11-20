@@ -83,6 +83,28 @@ public enum LinkWire {
         return p
     }
 
+    // MARK: write requests — DOCUMENTED ONLY. `writeParameter` is not in `allowed`, so `frame(...)`
+    // refuses to build a sendable frame from these, and FTDI.isReadOnlyFrame blocks them again.
+
+    /// PCLink's single-value write (0x2A, builder at 0x427A14): same 56-byte layout as a read —
+    /// [DataId][cell index (0xFFFF for scalars)][value, 4 bytes BE]. The value is float32 bits for
+    /// float settings and a plain int32 for option/integer settings (PCLink's type switch at 0x425479).
+    public static func writeValuePayload(dataId: UInt16, index: UInt16 = 0xFFFF, value: Double, asFloat: Bool) -> [UInt8] {
+        var p = [UInt8](repeating: 0, count: 0x38)
+        p[0] = UInt8(dataId >> 8); p[1] = UInt8(dataId & 0xFF)
+        p[2] = UInt8(index >> 8); p[3] = UInt8(index & 0xFF)
+        let bits: UInt32 = asFloat ? Float(value).bitPattern : UInt32(bitPattern: Int32(value.rounded()))
+        p[4] = UInt8(bits >> 24); p[5] = UInt8((bits >> 16) & 0xFF); p[6] = UInt8((bits >> 8) & 0xFF); p[7] = UInt8(bits & 0xFF)
+        return p
+    }
+
+    /// PCLink's text write (0x2A, builder at 0x427A80): [DataId][FF FF][UTF-16 chars + 0x0000].
+    public static func writeTextPayload(dataId: UInt16, text: String) -> [UInt8] {
+        var p: [UInt8] = [UInt8(dataId >> 8), UInt8(dataId & 0xFF), 0xFF, 0xFF]
+        for u in text.utf16 { p += [UInt8(u >> 8), UInt8(u & 0xFF)] }   // byte order unconfirmed
+        return p + [0, 0]
+    }
+
     // MARK: responses
 
     public struct Response {
