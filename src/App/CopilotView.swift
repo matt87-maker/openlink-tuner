@@ -1,17 +1,19 @@
 import SwiftUI
 import AppKit
+import Charts
 import UniformTypeIdentifiers
 
 // MARK: - Conversation state (lives as long as the window, so switching pages keeps the chat)
 
 @MainActor
 final class CopilotStore: ObservableObject {
-    struct Message: Identifiable {
-        let id = UUID()
+    struct Message: Identifiable, Codable {
+        var id = UUID()
         let role: String                 // "user" or "assistant"
         var text = ""                    // what the model wrote (assistant) or the question (user)
         var display = ""                 // markdown shown in the chat
         var plans: [CopilotPlan] = []
+        var charts: [CopilotChart] = []
         var status: String?
         var error: String?
         var attachments: [String] = []
@@ -24,8 +26,12 @@ final class CopilotStore: ObservableObject {
     @Published private(set) var logs: [URL] = []   // every log in this chat
     @Published private(set) var busy = false
     @Published private(set) var tick = 0           // bumps while a reply streams, for auto-scroll
+    @Published private(set) var chatID = UUID()
+    @Published private(set) var history: [ChatRecord.Summary] = []
     private var task: Task<Void, Never>?
     private var parsed: [URL: LogTable] = [:]
+
+    init() { history = ChatRecord.list() }
 
     static var defaultProvider: CopilotProvider {
         if CopilotKeychain.apiKey() != nil { return .openAI }
@@ -46,7 +52,42 @@ final class CopilotStore: ObservableObject {
 
     func newChat() {
         stop()
-        messages = []; logs = []; pending = []; draft = ""; parsed = [:]
+        messages = []; logs = []; pending = []; draft = ""; parsed = [:]; chatID = UUID()
+    }
+
+    // MARK: saved chats
+
+    func save() {
+        guard !messages.isEmpty else { return }
+        let title = messages.first { $0.role == "user" }?.text ?? "Chat"
+        let record = ChatRecord(id: chatID, title: String(title.prefix(80)), date: Date(),
+                                messages: messages.map { var m = $0; m.done = true; m.status = nil; return m }, logs: logs.map(\.path))
+        record.write()
+        history = ChatRecord.list()
+    }
+
+    func open(_ id: UUID) {
+        guard let record = ChatRecord.read(id) else { history = ChatRecord.list(); return }
+        stop()
+        chatID = record.id; messages = record.messages; pending = []; draft = ""; parsed = [:]
+        logs = record.logs.map { URL(fileURLWithPath: $0) }.filter { FileManager.default.fileExists(atPath: $0.path) }
+    }
+
+    func delete(_ id: UUID) {
+        ChatRecord.remove(id)
+        if id == chatID { newChat() }
+        history = ChatRecord.list()
+    }
+
+    /// A parsed log for drawing charts: by (partial) file name, or the newest log in the chat.
+    func chartLog(_ name: String?) -> (name: String, table: LogTable)? {
+        let url: URL? = name.flatMap { n in logs.last { $0.lastPathComponent.localizedCaseInsensitiveContains(n) || n.localizedCaseInsensitiveContains($0.deletingPathExtension().lastPathComponent) } } ?? logs.last
+        guard let url else { return nil }
+        if let t = parsed[url] { return (url.lastPathComponent, t) }
+        guard let text = try? String(contentsOf: url, encoding: .utf8) else { return nil }
+        let t = LogTable(csv: text)
+        parsed[url] = t
+        return (url.lastPathComponent, t)
     }
 
     func stop() { task?.cancel(); task = nil }
@@ -83,7 +124,7 @@ final class CopilotStore: ObservableObject {
         let provider = provider, modelName = modelName, logURLs = logs
         task = Task { [weak self] in
             guard let self else { return }
-            defer { self.busy = false; self.update(id) { $0.done = true; $0.status = nil } }
+            defer { self.busy = false; self.update(id) { $0.done = true; $0.status = nil }; self.save() }
             do {
                 let tables = try await self.load(logURLs)
                 let analysis = tables.isEmpty ? nil : LogAnalysis(logs: tables, tune: app.tune, catalog: app.catalog)
@@ -93,7 +134,7 @@ final class CopilotStore: ObservableObject {
                 for round in 0..<3 {
                     let context = TuneContext.build(tune: app.tune, catalog: app.catalog, fileName: app.fileName, focusID: app.selectedId,
                                                     mainTables: app.mainTables, extraTables: extra, blocked: blocked,
-                                                    logs: analysis, live: liveText)
+                                                    logs: analysis, live: liveText, modified: app.modifiedIds)
                     let raw = try await CopilotClient.reply(provider: provider, model: modelName,
                                                             instructions: CopilotPrompt.instructions + "\n\n" + context,
                                                             messages: history) { [weak self] partial in
@@ -115,7 +156,7 @@ final class CopilotStore: ObservableObject {
                     } else if !result.changes.isEmpty {
                         self.update(id) { $0.error = "Open a tune to review these changes." }
                     }
-                    self.update(id) { $0.text = raw; $0.display = result.display; $0.plans = plans }
+                    self.update(id) { $0.text = raw; $0.display = result.display; $0.plans = plans; $0.charts = result.charts }
                     break
                 }
             } catch {
@@ -180,6 +221,7 @@ final class CopilotStore: ObservableObject {
         }
         let what = plan.isScalar ? plan.name : "\(plan.name), \(plan.edits.count) cells"
         app.apply(plan.parameterID, changes, label: (revert ? "Reverted " : "Applied ") + what + " · ⌘Z to undo")
+        save()
     }
 }
 
@@ -193,6 +235,7 @@ struct CopilotView: View {
     @AppStorage("copilot.model") private var modelName = CopilotClient.defaultModel
     @State private var showSettings = false
     @State private var dropping = false
+    @State private var showHistory = false
 
     private var provider: CopilotProvider { CopilotProvider(rawValue: providerRaw) ?? .openAI }
 
@@ -245,6 +288,9 @@ struct CopilotView: View {
 
             Spacer()
             contextChip
+            Button { showHistory.toggle() } label: { Image(systemName: "clock.arrow.circlepath").font(.system(size: 16)) }
+                .buttonStyle(.plain).foregroundStyle(.secondary).help("Chat history")
+                .popover(isPresented: $showHistory, arrowEdge: .bottom) { historyList }
             Button { store.newChat() } label: { Image(systemName: "square.and.pencil").font(.system(size: 16)) }
                 .buttonStyle(.plain).foregroundStyle(.secondary).help("New chat").disabled(store.messages.isEmpty && store.pending.isEmpty)
             Button { showSettings = true } label: { Image(systemName: "gearshape").font(.system(size: 16)) }
@@ -269,6 +315,37 @@ struct CopilotView: View {
         .help("Copilot sees the open tune, the logs attached to this chat and live ECU data when connected.")
     }
 
+    private var historyList: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("Chats").font(.headline).padding(12)
+            Divider()
+            if store.history.isEmpty {
+                Text("No saved chats yet.").foregroundStyle(.secondary).padding(16)
+            } else {
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 2) {
+                        ForEach(store.history) { h in
+                            HStack {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(h.title).lineLimit(1).font(.system(size: 13, weight: h.id == store.chatID ? .semibold : .regular))
+                                    Text(h.date, style: .relative).font(.system(size: 11)).foregroundStyle(.secondary)
+                                }
+                                Spacer()
+                                Button { store.delete(h.id) } label: { Image(systemName: "trash") }.buttonStyle(.plain).foregroundStyle(.secondary).help("Delete chat")
+                            }
+                            .padding(.horizontal, 12).padding(.vertical, 7)
+                            .background(RoundedRectangle(cornerRadius: 8).fill(h.id == store.chatID ? Color.primary.opacity(0.07) : .clear))
+                            .contentShape(Rectangle())
+                            .onTapGesture { store.open(h.id); showHistory = false }
+                        }
+                    }
+                    .padding(6)
+                }
+            }
+        }
+        .frame(width: 320, height: 380)
+    }
+
     // MARK: empty state
 
     private struct Suggestion: Identifiable {
@@ -278,7 +355,7 @@ struct CopilotView: View {
     }
     private let suggestions = [
         Suggestion(title: "Check my tune", detail: "like a pro before a dyno day", icon: "checklist",
-                   prompt: "Go through my tune like a professional tuner would before a dyno day. What's wrong or risky, and what would you change first?"),
+                   prompt: "Run a full tune check like a professional tuner before a dyno day. Go through the automatic findings and anything else you see: what's wrong or risky, and what would you change first?"),
         Suggestion(title: "Fix fuel from my log", detail: "correct the fuel table from lambda", icon: "drop",
                    prompt: "Use my log to correct the fuel table. Show me the lean and rich areas and propose the changes.", needsLog: true),
         Suggestion(title: "Explain my ignition table", detail: "is the timing sensible?", icon: "bolt",
@@ -520,6 +597,7 @@ struct CopilotMessageView: View {
                     .padding(12)
                     .background(RoundedRectangle(cornerRadius: 12).fill(Color.red.opacity(0.08)))
                 }
+                ForEach(Array(message.charts.enumerated()), id: \.offset) { _, chart in CopilotChartView(spec: chart, store: store) }
                 ForEach(message.plans) { plan in PlanCard(plan: plan, store: store) }
                 if message.done && !message.display.isEmpty {
                     HStack(spacing: 14) {
@@ -601,7 +679,7 @@ struct DeltaMap: View {
     var body: some View {
         let changes = Dictionary(plan.edits.map { ([$0.row, $0.col], $0.old != 0 ? ($0.new / $0.old - 1) : ($0.new - $0.old)) }, uniquingKeysWith: { a, _ in a })
         let peak = max(changes.values.map(abs).max() ?? 1, 1e-9)
-        let cell = max(5.0, min(14.0, 420.0 / Double(max(plan.cols, 1))))
+        let cell = max(5.0, min(plan.cols > 12 ? 10.0 : 14.0, 320.0 / Double(max(plan.cols, 1))))
         HStack(alignment: .bottom, spacing: 10) {
             Canvas { ctx, _ in
                 for r in 0..<plan.rows {
@@ -803,5 +881,131 @@ struct CopilotSettingsView: View {
                     : s.connected == true ? "Signed in — allow plan usage to continue" : "Not signed in"
             } catch { planStatus = error.localizedDescription }
         }
+    }
+}
+
+// MARK: - Charts from logs
+
+struct CopilotChartView: View {
+    let spec: CopilotChart
+    @ObservedObject var store: CopilotStore
+
+    struct Series: Identifiable { let id: Int; let name: String; let points: [ChartPoint] }
+    struct ChartPoint: Identifiable { let id: Int; let x: Double; let y: Double }
+
+    private static func column(_ log: LogTable, _ name: String) -> Int? {
+        let n = name.lowercased()
+        if let i = log.columns.firstIndex(where: { $0.lowercased() == n }) { return i }
+        if let i = log.columns.firstIndex(where: { $0.lowercased().contains(n) }) { return i }
+        return log.columns.firstIndex { n.contains($0.lowercased().components(separatedBy: " (").first ?? "~") }
+    }
+
+    /// The x name and one downsampled series per y channel.
+    static func build(_ spec: CopilotChart, _ log: LogTable) -> (xName: String, series: [Series]) {
+        let useTime = (spec.x ?? "time").lowercased().hasPrefix("time")
+        let xCol = useTime ? nil : spec.x.flatMap { column(log, $0) }
+        let xs: [Double?] = xCol.map { log.data[$0] } ?? log.time.map { Optional($0) }
+        let xName = xCol.map { log.columns[$0] } ?? "Time (s)"
+        let step = max(1, log.time.count / 1500)
+        var out: [Series] = []
+        for (k, y) in spec.y.enumerated() {
+            guard let c = column(log, y) else { continue }
+            var pts: [ChartPoint] = []
+            for i in stride(from: 0, to: log.time.count, by: step) {
+                if let x = xs[i], let v = log.data[c][i] { pts.append(ChartPoint(id: i, x: x, y: v)) }
+            }
+            out.append(Series(id: k, name: log.columns[c], points: pts))
+        }
+        return (xName, out)
+    }
+
+    var body: some View {
+        if let found = store.chartLog(spec.log) {
+            let built = Self.build(spec, found.table)
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Image(systemName: "chart.xyaxis.line").foregroundStyle(.orange)
+                    Text(spec.title ?? built.series.map(\.name).joined(separator: ", ")).font(.system(size: 14, weight: .semibold))
+                    Spacer()
+                    Text(found.name).font(.system(size: 11)).foregroundStyle(.tertiary)
+                }
+                if built.series.isEmpty {
+                    Text("None of \(spec.y.joined(separator: ", ")) are in \(found.name).").foregroundStyle(.secondary).font(.callout)
+                }
+                ForEach(built.series) { s in SeriesChart(series: s, xName: built.xName, scatter: spec.kind == "scatter") }
+                Text(built.xName).font(.system(size: 10)).foregroundStyle(.tertiary).frame(maxWidth: .infinity, alignment: .center)
+            }
+            .padding(14)
+            .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(Color.primary.opacity(0.035)))
+            .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous).strokeBorder(Color.primary.opacity(0.1)))
+        } else {
+            Label("Attach a log to draw this chart.", systemImage: "chart.xyaxis.line").foregroundStyle(.secondary)
+        }
+    }
+
+    struct SeriesChart: View {
+        let series: Series
+        let xName: String
+        let scatter: Bool
+        private var color: Color { [Color.orange, .blue, .green, .purple, .pink][series.id % 5] }
+
+        var body: some View {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(series.name).font(.system(size: 11)).foregroundStyle(.secondary)
+                chart.chartYScale(domain: .automatic(includesZero: false)).frame(height: 110)
+            }
+        }
+
+        @ViewBuilder private var chart: some View {
+            if scatter {
+                Chart(series.points) { p in
+                    PointMark(x: .value(xName, p.x), y: .value(series.name, p.y)).symbolSize(8).foregroundStyle(color.opacity(0.6))
+                }
+            } else {
+                Chart(series.points) { p in
+                    LineMark(x: .value(xName, p.x), y: .value(series.name, p.y)).foregroundStyle(color).lineStyle(StrokeStyle(lineWidth: 1.2))
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Saved chats
+
+/// One chat on disk: ~/Library/Application Support/OpenLink Tuner/Chats/<id>.json
+struct ChatRecord: Codable {
+    struct Summary: Identifiable { let id: UUID; let title: String; let date: Date }
+    let id: UUID
+    let title: String
+    let date: Date
+    let messages: [CopilotStore.Message]
+    let logs: [String]
+
+    static var folder: URL {
+        let u = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Application Support/OpenLink Tuner/Chats", isDirectory: true)
+        try? FileManager.default.createDirectory(at: u, withIntermediateDirectories: true)
+        return u
+    }
+
+    func write() {
+        let enc = JSONEncoder(); enc.dateEncodingStrategy = .iso8601
+        try? enc.encode(self).write(to: ChatRecord.folder.appendingPathComponent(id.uuidString + ".json"), options: .atomic)
+    }
+
+    static func read(_ id: UUID) -> ChatRecord? {
+        let dec = JSONDecoder(); dec.dateDecodingStrategy = .iso8601
+        return (try? Data(contentsOf: folder.appendingPathComponent(id.uuidString + ".json"))).flatMap { try? dec.decode(ChatRecord.self, from: $0) }
+    }
+
+    static func remove(_ id: UUID) { try? FileManager.default.removeItem(at: folder.appendingPathComponent(id.uuidString + ".json")) }
+
+    static func list() -> [Summary] {
+        struct Head: Decodable { let id: UUID; let title: String; let date: Date }
+        let dec = JSONDecoder(); dec.dateDecodingStrategy = .iso8601
+        let files = (try? FileManager.default.contentsOfDirectory(at: folder, includingPropertiesForKeys: nil)) ?? []
+        return files.filter { $0.pathExtension == "json" }
+            .compactMap { (try? Data(contentsOf: $0)).flatMap { try? dec.decode(Head.self, from: $0) } }
+            .map { Summary(id: $0.id, title: $0.title, date: $0.date) }
+            .sorted { $0.date > $1.date }
     }
 }

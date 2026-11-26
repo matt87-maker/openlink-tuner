@@ -126,6 +126,11 @@ final class AppModel: ObservableObject {
     @Published var showLearn = false
     @Published var showLive = false
     @Published var showCopilot = false
+    /// Logs analysed for auto-tune, shown as an overlay in fuel and ignition tables.
+    @Published var autoTune: LogAnalysis?
+    @Published var autoTuneLogs: [String] = []
+    /// Table values when the logs were analysed: the overlay only applies while the table still matches.
+    var autoTuneBase: [Int: [[Double]]] = [:]
     @Published var unreadIds: Set<Int> = []          // settings the ECU read couldn't fetch
     @Published var scaleCheckIds: Set<Int> = []      // read as integers with tune-specific scaling
     @Published var ecuReadSummary: String?
@@ -373,7 +378,8 @@ final class AppModel: ObservableObject {
         }
         .map(\.dataId)
         .sorted { a, b in
-            let ra = rank(name(a)), rb = rank(name(b))
+            func second(_ id: Int) -> Int { name(id).hasSuffix("2") ? 1 : 0 }   // "Fuel Table2" after "FuelTable1"
+            let ra = rank(name(a)) * 2 + second(a), rb = rank(name(b)) * 2 + second(b)
             return ra != rb ? ra < rb : name(a).localizedStandardCompare(name(b)) == .orderedAscending
         }
     }

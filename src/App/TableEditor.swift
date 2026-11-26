@@ -1,6 +1,7 @@
 import SwiftUI
 import AppKit
 import Charts
+import UniformTypeIdentifiers
 
 /// Tuning-software style table editor: axis headers, heat map, range selection,
 /// type-to-edit, +/− stepping, scale, interpolate, smooth, copy/paste, compare.
@@ -21,6 +22,9 @@ struct TableEditor: View {
     @State private var stepText = ""
     @State private var pctText = "5"
     @FocusState private var gridFocused: Bool
+    @EnvironmentObject private var live: LiveEngine
+    @State private var tunable: (fuel: Bool, ign: Bool) = (false, false)
+    @State private var analysing = false
 
     private let cw: CGFloat = 68, ch: CGFloat = 30, hw: CGFloat = 84, hh: CGFloat = 34
 
@@ -68,6 +72,10 @@ struct TableEditor: View {
             statusBar
         }
         .onAppear {
+            if let t = model.tune {
+                let tables = LogAnalysis.tables(t, model.catalog)
+                tunable = (tables.fuel.contains { $0.id == id }, tables.ign.contains { $0.id == id })
+            }
             stepText = TuneExport.num(model.step(id))
             gridFocused = true
         }
@@ -102,6 +110,7 @@ struct TableEditor: View {
                     Button("Copy selection from compared") { model.takeFromCompare(id, cells: selected) }
                         .disabled(b == nil)
                 }
+                if tunable.fuel || tunable.ign { autoTuneControls }
                 Spacer(minLength: 0)
                 if hasHiddenCells || showUnused {
                     Toggle("Show unused cells", isOn: $showUnused).toggleStyle(.checkbox)
@@ -235,12 +244,121 @@ struct TableEditor: View {
                     Circle().fill(Color.orange).frame(width: 5, height: 5).padding(2)
                 }
             }
+            .overlay(alignment: .bottomTrailing) {
+                if let k = correction(r, c) {
+                    Text(CopilotPlan.signed(k.percent) + "%")
+                        .font(.system(size: 9, weight: .bold).monospacedDigit())
+                        .foregroundStyle(k.percent >= 0 ? Color.orange : Color.blue)
+                        .padding(.horizontal, 2).background(Color.black.opacity(0.35), in: RoundedRectangle(cornerRadius: 2))
+                        .help(String(format: "Logged λ %.3f vs target %.3f%@ · %d samples", k.measured, k.target, abs(k.trim) > 0.05 ? String(format: ", closed-loop trim %+.1f%%", k.trim) : "", Int(k.weight.rounded())))
+                } else if let k = knockCell(r, c) {
+                    Text("K\(k.events)")
+                        .font(.system(size: 9, weight: .bold)).foregroundStyle(.white)
+                        .padding(.horizontal, 2).background(Color.red, in: RoundedRectangle(cornerRadius: 2))
+                        .help("\(k.events) knock event\(k.events == 1 ? "" : "s") logged here" + (k.maxRetard > 0 ? ", up to \(TuneExport.num(k.maxRetard))° retard" : ""))
+                }
+            }
             .overlay(alignment: .topTrailing) {
                 if mode == .values, b != nil, let p, TuneDiff.cellDiffers(p, b, r, c) {
                     Triangle().fill(Color.purple).frame(width: 7, height: 7)
                 }
             }
             .opacity(unused ? 0.45 : 1)
+    }
+
+    // MARK: auto-tune from logs
+
+    /// The analysis still describes this table (it hasn't been corrected or edited since).
+    private var analysisCurrent: Bool { model.autoTuneBase[id] == nil || model.autoTuneBase[id] == p?.rows }
+
+    private func correction(_ r: Int, _ c: Int) -> LogAnalysis.Correction? {
+        guard mode == .values, analysisCurrent, let k = model.autoTune?.corrections[id]?[[r, c]], abs(k.percent) >= 0.5 else { return nil }
+        return k
+    }
+
+    private func knockCell(_ r: Int, _ c: Int) -> LogAnalysis.KnockCell? {
+        guard mode == .values, analysisCurrent else { return nil }
+        return model.autoTune?.knock[id]?[[r, c]]
+    }
+
+    /// Cells the Correct button would change (rounded to the table's precision).
+    private var correctableCells: Int {
+        guard analysisCurrent, let tune = model.tune, model.autoTune?.corrections[id] != nil else { return 0 }
+        return CopilotPlanner(tune: tune, catalog: model.catalog, analysis: model.autoTune).plan(CopilotChange(id: id, op: "lambda_correct")).edits.count
+    }
+
+    private var autoTuneControls: some View {
+        HStack(spacing: 6) {
+            Menu {
+                Button("Analyse Logs…") {
+                    let panel = NSOpenPanel()
+                    panel.allowedContentTypes = [.commaSeparatedText, .plainText]; panel.allowsMultipleSelection = true
+                    panel.message = "Choose data logs to tune this table from"
+                    if panel.runModal() == .OK { analyse(panel.urls) }
+                }
+                let recent = live.logs.list().prefix(8)
+                if !recent.isEmpty {
+                    Section("Recent recordings") {
+                        ForEach(recent) { info in Button(info.id) { analyse([live.logs.folder.appendingPathComponent(info.id)]) } }
+                    }
+                }
+                if model.autoTune != nil {
+                    Divider()
+                    Button("Clear Log Analysis") { model.autoTune = nil; model.autoTuneLogs = []; model.autoTuneBase = [:] }
+                }
+            } label: {
+                if analysing { ProgressView().controlSize(.mini) } else { Label("Auto-tune", systemImage: "wand.and.stars") }
+            }
+            .fixedSize()
+            .help(model.autoTuneLogs.isEmpty ? "Correct this table from data logs" : "Analysed: " + model.autoTuneLogs.joined(separator: ", "))
+            if tunable.fuel, case let n = correctableCells, n > 0 {
+                Button(selected.count > 1 ? "Correct selection" : "Correct \(n) cells") { applyAutoTune(op: "lambda_correct", value: nil) }
+                    .buttonStyle(.borderedProminent)
+                    .help("Apply the logged lambda corrections (max ±15 % per pass). Undo with ⌘Z.")
+            }
+            if tunable.ign, analysisCurrent, let k = model.autoTune?.knock[id], !k.isEmpty {
+                Button(selected.count > 1 ? "Pull 2° in selection" : "Pull 2° where it knocked") { applyAutoTune(op: "knock_retard", value: 2) }
+                    .help("Retard knocking cells 2° and their neighbours 1°. Undo with ⌘Z.")
+            }
+        }
+    }
+
+    private func analyse(_ urls: [URL]) {
+        guard !urls.isEmpty, let tune = model.tune else { return }
+        analysing = true
+        Task { @MainActor in
+            defer { analysing = false }
+            do {
+                let logs = try await Task.detached(priority: .userInitiated) {
+                    try urls.map { url -> (name: String, table: LogTable) in
+                        let t = LogTable(csv: try String(contentsOf: url, encoding: .utf8))
+                        guard !t.time.isEmpty else { throw CopilotError("No samples in \(url.lastPathComponent)") }
+                        return (url.lastPathComponent, t)
+                    }
+                }.value
+                let analysis = LogAnalysis(logs: logs, tune: tune, catalog: model.catalog)
+                model.autoTune = analysis
+                model.autoTuneLogs = logs.map(\.name)
+                model.autoTuneBase = Dictionary(uniqueKeysWithValues: (analysis.corrections.keys.map { $0 } + analysis.knock.keys.map { $0 })
+                    .compactMap { k in tune.parameter(k).map { (k, $0.rows) } })
+                let cells = analysis.corrections[id]?.count ?? 0, knock = analysis.knock[id]?.count ?? 0
+                model.flash(tunable.fuel ? (cells > 0 ? "Auto-tune: \(cells) cells have enough data" : "No usable warm, steady lambda data for this table")
+                                         : (knock > 0 ? "Knock logged in \(knock) cells" : "No knock in these logs"))
+            } catch { model.error = error.localizedDescription }
+        }
+    }
+
+    private func applyAutoTune(op: String, value: Double?) {
+        guard let tune = model.tune else { return }
+        var change = CopilotChange(id: id, op: op, value: value)
+        if selected.count > 1, let x = axes.x, let y = axes.y {
+            let s = rect
+            change.x = [x.values[s.c0], x.values[s.c1]]; change.y = [y.values[s.r0], y.values[s.r1]]
+        }
+        let plan = CopilotPlanner(tune: tune, catalog: model.catalog, blocked: model.unreadIds.union(model.scaleCheckIds), analysis: model.autoTune).plan(change)
+        if let problem = plan.problem { model.flash(problem); return }
+        model.apply(id, plan.edits.map { (.cell($0.row, $0.col), $0.new) },
+                    label: (op == "knock_retard" ? "Pulled timing in " : "Corrected ") + "\(plan.edits.count) cells · ⌘Z to undo")
     }
 
     private var selectionOutline: some View {
