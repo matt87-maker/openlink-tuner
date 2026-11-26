@@ -56,7 +56,7 @@ free and open source.
 - records **CSV logs**, and reconnects by itself when the ignition goes off and on.
 
 **iPhone (OpenLink Mobile)**
-- Finds your Mac on Wi-Fi automatically.
+- Reconnects to an approved Mac over encrypted Wi-Fi. In OpenLink Mobile, tap **Mac → Pair with a Mac**. On the Mac, open **Live**, enter a phone name and the private code shown on the iPhone, then click **Approve Phone**. Click **Revoke** there to disconnect that phone and remove its access. Update both apps to use pairing.
 - Big RPM gauge + live tiles, screen stays on.
 - Every log with charts, scrubbing and min/avg/max; share as CSV.
 - Browse the tune (read-only) with heat-mapped tables.
@@ -65,6 +65,15 @@ free and open source.
 **AI-ready export** — one click exports (or copies) the whole tune as Markdown with every
 setting named and every table with its axes, so you can paste it into ChatGPT, Claude, etc.
 and ask about your tune. Also JSON and raw decrypted XML.
+
+**Copilot** — a ChatGPT-style tuning assistant in the sidebar. It sees the open tune, the CSV logs
+you attach (+ button or drag & drop) and live ECU data, and talks like a pro tuner. Ask in plain
+words ("fix my fuel from this log", "add 3% fuel above 5000 RPM on boost", "set up launch control");
+it answers and shows each change as a card with a preview. Click **Apply** to put it in the open
+tune (undoable, clamped to each setting's allowed range). Nothing is written to the ECU. Fuel is
+corrected from warm, steady-state lambda across every logged sample. Answers come from your
+OpenAI API key (saved in the Keychain, gear icon) or your ChatGPT account (needs Node.js 22.12+;
+run `bash src/scripts/install-chatgpt-plan.sh` once).
 
 <p align="center">
   <img src="screenshots/mac-overview.jpg" width="49%" alt="Tune overview">

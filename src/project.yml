@@ -43,6 +43,11 @@ targets:
       - path: App
       - path: Shared
       - path: Sources/OpenLinkKit      # same files as the OpenLinkKit target, compiled into the app directly
+      - path: Resources/chatgpt-plan.mjs
+        buildPhase: resources
+      - path: Resources/CourseLab
+        type: folder
+        buildPhase: resources
       - path: Resources/catalog.json
         buildPhase: resources
     dependencies:
@@ -71,8 +76,8 @@ targets:
         LSApplicationCategoryType: public.app-category.utilities
         NSHumanReadableCopyright: Open source (MIT). Not affiliated with Link Engine Management Ltd.
         NSHighResolutionCapable: true
-        NSLocalNetworkUsageDescription: OpenLink Tuner shares live ECU data, logs and your tune with OpenLink Mobile on your iPhone over your local network.
-        NSBonjourServices: [_openlink._tcp]
+        NSLocalNetworkUsageDescription: OpenLink Tuner uses your local network to share ECU data, logs and tunes with phones you approve on this Mac.
+        NSBonjourServices: [_openlink2._tcp]
         CFBundleDocumentTypes:
           - CFBundleTypeName: Link ECU Tune
             CFBundleTypeRole: Editor
@@ -105,8 +110,8 @@ targets:
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
         UISupportedInterfaceOrientations~ipad: [UIInterfaceOrientationPortrait, UIInterfaceOrientationPortraitUpsideDown, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
-        NSLocalNetworkUsageDescription: OpenLink finds your Mac on the local network to show live ECU data, logs and your tune.
-        NSBonjourServices: [_openlink._tcp]
+        NSLocalNetworkUsageDescription: OpenLink finds your paired Mac on the local network to show ECU data, logs and tunes over an encrypted connection.
+        NSBonjourServices: [_openlink2._tcp]
         UIUserInterfaceStyle: Dark
     scheme:
       testTargets: []

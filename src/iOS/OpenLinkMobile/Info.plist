@@ -22,10 +22,10 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>NSBonjourServices</key>
 	<array>
-		<string>_openlink._tcp</string>
+		<string>_openlink2._tcp</string>
 	</array>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>OpenLink finds your Mac on the local network to show live ECU data, logs and your tune.</string>
+	<string>OpenLink finds your paired Mac on the local network to show ECU data, logs and tunes over an encrypted connection.</string>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UISupportedInterfaceOrientations</key>

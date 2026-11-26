@@ -16,6 +16,8 @@
 		1DE0519DC60F4ED970AFBCE0 /* FTDI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A3ECEDB1A43E9AAE2346773 /* FTDI.swift */; };
 		2396A6973E6414A1806D2C02 /* LiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01B12825F699BC82279634F /* LiveView.swift */; };
 		2408E974B7A99E257340BCC2 /* TuneCrypt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 682F6DBF6B9C5505596F3336 /* TuneCrypt.swift */; };
+		2CE5EF7DB4B7D7EEE11B569B /* TuneCopilot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6092875411546DD044767417 /* TuneCopilot.swift */; };
+		30D8DAC9F91FBF0E3BA32FC7 /* CourseLab in Resources */ = {isa = PBXBuildFile; fileRef = 6629EF6AE1E8CEB0E561B3D0 /* CourseLab */; };
 		350EBE07DD75C5EE1CE191E6 /* PhoneServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A535F32D6ED640B0F2C6A2 /* PhoneServer.swift */; };
 		43E9F985FB66C2C99B7FD63A /* TuneDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729A39F11882E236EFB816D3 /* TuneDiff.swift */; };
 		4844096503985E1D96E56ED9 /* TableEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E054763C3E29E7EE6C9C1230 /* TableEditor.swift */; };
@@ -23,20 +25,27 @@
 		501ADC00A32B608C2E15E651 /* OpenLinkMobileApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B73214C32BBBBB561495755 /* OpenLinkMobileApp.swift */; };
 		59ECFE1271C44EEA6BE70EA5 /* EcuTuneReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E323EB90AC2FFBA708169544 /* EcuTuneReader.swift */; };
 		5D7B0CC63578C63E3EA0691C /* TuneAxes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074F15DD60EED69E6A492258 /* TuneAxes.swift */; };
+		5E622C24C2CB1EF52A86E159 /* CourseReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559BFEB1A32BDDE37CBE07ED /* CourseReader.swift */; };
 		6836090ECA1C4ECC7138B8CA /* LogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1BAF7E8E8399225F6D8A53 /* LogStore.swift */; };
+		68803B353E55C16074EB4614 /* CopilotClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B07F3DD562A56EC2B0CC4AE /* CopilotClient.swift */; };
 		6DCE4F7DF6166472E56A2620 /* LinkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0ACD56EAE0308FF807B1218 /* LinkClient.swift */; };
 		6F74288E66F30D76594D05F7 /* TuneAxes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074F15DD60EED69E6A492258 /* TuneAxes.swift */; };
 		70F109F9F8C953ED1F10AD14 /* LinkWire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FAC22312B770B0CE065D55 /* LinkWire.swift */; };
 		7592FB31DE587B73AD283680 /* TuneFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C08821B419CCF3BAD3463 /* TuneFile.swift */; };
+		7A39DF7CAAAD170B66199022 /* LogTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6A9504D21E7B6FE6943B95 /* LogTable.swift */; };
 		7EEBDFCD2AFFC158B60C204B /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5CBFCCCB2F302576BD5A8C /* DashboardView.swift */; };
 		886D5756F5BE07961C490134 /* LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10824946071D44DAF9CD823 /* LogsView.swift */; };
 		89E8B8C7DCDD8FD337691692 /* LiveEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 813488E083C25253BF821161 /* LiveEngine.swift */; };
+		8B69F20676833EF319A3F1CA /* CourseLab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C545050B6B3164A1424A8C5 /* CourseLab.swift */; };
 		8D3353E4F71C97A8B40C2251 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7421CDF13623311671BA7295 /* IOKit.framework */; };
+		922A436E7518D66DF1B09784 /* LogTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6A9504D21E7B6FE6943B95 /* LogTable.swift */; };
 		9832D97E45351CCF0DC2AA8A /* PhoneLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE34DA03DFF052F78BDB7B23 /* PhoneLink.swift */; };
 		A21F2D58C0FDE849E61FABF5 /* TuneFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C08821B419CCF3BAD3463 /* TuneFile.swift */; };
 		ACDA4A74DA4F717D71B87A9E /* catalog.json in Resources */ = {isa = PBXBuildFile; fileRef = 770C3E01C4E1638712528DC6 /* catalog.json */; };
+		B3BB98B5BE96936CFE4B272C /* Course.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3797FCE62035B87B950FC3D3 /* Course.swift */; };
 		B825D687B3693B3D2A6BBF45 /* LinkWire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FAC22312B770B0CE065D55 /* LinkWire.swift */; };
 		C32F5717B262DFF5A2046F88 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7CCC212F242B978CA11AF218 /* Assets.xcassets */; };
+		C7E9CD75E9C7E105BC73A7F0 /* chatgpt-plan.mjs in Resources */ = {isa = PBXBuildFile; fileRef = 2DD3A2D1595A1D885897BC2A /* chatgpt-plan.mjs */; };
 		C830CB604BB46011B460EC76 /* TuneDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729A39F11882E236EFB816D3 /* TuneDiff.swift */; };
 		CCDE96D79D7537C84F67BBF6 /* PhoneLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE34DA03DFF052F78BDB7B23 /* PhoneLink.swift */; };
 		CEF000E554DA8C7882087938 /* EcuManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC31586564EE3D25B50EE2 /* EcuManager.swift */; };
@@ -46,6 +55,8 @@
 		DC1D640DE388BC8560537233 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6365E1F52635728636DDE0A /* SystemConfiguration.framework */; };
 		DF597F400FED2DBD267E93C0 /* TuneExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DB865FAC2623645AC6A547 /* TuneExport.swift */; };
 		E23CD1EB9EEC797229B47405 /* libOpenLinkKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D62C1AB1E1A97346B0BAFEC /* libOpenLinkKit.a */; };
+		EC3F7ABC258B63B19AC46539 /* ChatGPTPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB04A009AF661DAF4EEF5968 /* ChatGPTPlan.swift */; };
+		EEEE4765E5AFB1022BE30FA3 /* CopilotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8820F06E9812F13988A879 /* CopilotView.swift */; };
 		F07F7E4C3ECDEFF3170D2AB5 /* Catalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EEAAF9B337113C51E83D582 /* Catalog.swift */; };
 		F9C9BB6110C7D6CC33AA756E /* LinkECU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5975F52B4E987575C62CDF5F /* LinkECU.swift */; };
 /* End PBXBuildFile section */
@@ -68,10 +79,18 @@
 		1EEAAF9B337113C51E83D582 /* Catalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Catalog.swift; sourceTree = "<group>"; };
 		22FAC22312B770B0CE065D55 /* LinkWire.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkWire.swift; sourceTree = "<group>"; };
 		2B73214C32BBBBB561495755 /* OpenLinkMobileApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenLinkMobileApp.swift; sourceTree = "<group>"; };
+		2DD3A2D1595A1D885897BC2A /* chatgpt-plan.mjs */ = {isa = PBXFileReference; path = "chatgpt-plan.mjs"; sourceTree = "<group>"; };
+		3797FCE62035B87B950FC3D3 /* Course.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Course.swift; sourceTree = "<group>"; };
+		559BFEB1A32BDDE37CBE07ED /* CourseReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseReader.swift; sourceTree = "<group>"; };
 		5975F52B4E987575C62CDF5F /* LinkECU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkECU.swift; sourceTree = "<group>"; };
 		5B5CBFCCCB2F302576BD5A8C /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		5E8820F06E9812F13988A879 /* CopilotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopilotView.swift; sourceTree = "<group>"; };
+		6092875411546DD044767417 /* TuneCopilot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TuneCopilot.swift; sourceTree = "<group>"; };
 		65DB865FAC2623645AC6A547 /* TuneExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TuneExport.swift; sourceTree = "<group>"; };
+		6629EF6AE1E8CEB0E561B3D0 /* CourseLab */ = {isa = PBXFileReference; lastKnownFileType = folder; name = CourseLab; path = Resources/CourseLab; sourceTree = SOURCE_ROOT; };
 		682F6DBF6B9C5505596F3336 /* TuneCrypt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TuneCrypt.swift; sourceTree = "<group>"; };
+		6B07F3DD562A56EC2B0CC4AE /* CopilotClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopilotClient.swift; sourceTree = "<group>"; };
+		6C545050B6B3164A1424A8C5 /* CourseLab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseLab.swift; sourceTree = "<group>"; };
 		6F7DA98D7D40A46F8D0D7836 /* Charts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Charts.framework; path = System/Library/Frameworks/Charts.framework; sourceTree = SDKROOT; };
 		729A39F11882E236EFB816D3 /* TuneDiff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TuneDiff.swift; sourceTree = "<group>"; };
 		7421CDF13623311671BA7295 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
@@ -85,6 +104,7 @@
 		8D62C1AB1E1A97346B0BAFEC /* libOpenLinkKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOpenLinkKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B63D6AC9EC9F84B709975EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		B02BC2B142973E77EBC2A7A2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		BB04A009AF661DAF4EEF5968 /* ChatGPTPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatGPTPlan.swift; sourceTree = "<group>"; };
 		C8F37A9F1DD769C2D89A7073 /* openlink */ = {isa = PBXFileReference; includeInIndex = 0; path = openlink; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD415922BB0A886416DAC1E7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		CEEC31586564EE3D25B50EE2 /* EcuManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EcuManager.swift; sourceTree = "<group>"; };
@@ -99,6 +119,7 @@
 		E6A535F32D6ED640B0F2C6A2 /* PhoneServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneServer.swift; sourceTree = "<group>"; };
 		F66E085C5B6CD2CB9BB7C0F5 /* UsbWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsbWatcher.swift; sourceTree = "<group>"; };
 		FE34DA03DFF052F78BDB7B23 /* PhoneLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneLink.swift; sourceTree = "<group>"; };
+		FF6A9504D21E7B6FE6943B95 /* LogTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogTable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,10 +187,17 @@
 			children = (
 				01898A9CFCFAD29C02C1A3CA /* Live */,
 				814A12B83355F1F8E4E68843 /* Assets.xcassets */,
+				BB04A009AF661DAF4EEF5968 /* ChatGPTPlan.swift */,
 				CD415922BB0A886416DAC1E7 /* ContentView.swift */,
+				6B07F3DD562A56EC2B0CC4AE /* CopilotClient.swift */,
+				5E8820F06E9812F13988A879 /* CopilotView.swift */,
+				3797FCE62035B87B950FC3D3 /* Course.swift */,
+				6C545050B6B3164A1424A8C5 /* CourseLab.swift */,
+				559BFEB1A32BDDE37CBE07ED /* CourseReader.swift */,
 				9B63D6AC9EC9F84B709975EE /* Info.plist */,
 				855CB9FC81E6552A4B2DF637 /* OpenLinkTunerApp.swift */,
 				E054763C3E29E7EE6C9C1230 /* TableEditor.swift */,
+				6092875411546DD044767417 /* TuneCopilot.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -192,6 +220,8 @@
 			isa = PBXGroup;
 			children = (
 				770C3E01C4E1638712528DC6 /* catalog.json */,
+				2DD3A2D1595A1D885897BC2A /* chatgpt-plan.mjs */,
+				6629EF6AE1E8CEB0E561B3D0 /* CourseLab */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -250,6 +280,7 @@
 		F462A7372993BEE3EDC70C76 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				FF6A9504D21E7B6FE6943B95 /* LogTable.swift */,
 				FE34DA03DFF052F78BDB7B23 /* PhoneLink.swift */,
 			);
 			path = Shared;
@@ -385,7 +416,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				D2987E55F0E27D09D23074C9 /* Assets.xcassets in Resources */,
+				30D8DAC9F91FBF0E3BA32FC7 /* CourseLab in Resources */,
 				ACDA4A74DA4F717D71B87A9E /* catalog.json in Resources */,
+				C7E9CD75E9C7E105BC73A7F0 /* chatgpt-plan.mjs in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -477,7 +510,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				D1F8CCF82D4A41801E60FF67 /* Catalog.swift in Sources */,
+				EC3F7ABC258B63B19AC46539 /* ChatGPTPlan.swift in Sources */,
 				14D86534225F6442D579CE20 /* ContentView.swift in Sources */,
+				68803B353E55C16074EB4614 /* CopilotClient.swift in Sources */,
+				EEEE4765E5AFB1022BE30FA3 /* CopilotView.swift in Sources */,
+				B3BB98B5BE96936CFE4B272C /* Course.swift in Sources */,
+				8B69F20676833EF319A3F1CA /* CourseLab.swift in Sources */,
+				5E622C24C2CB1EF52A86E159 /* CourseReader.swift in Sources */,
 				CEF000E554DA8C7882087938 /* EcuManager.swift in Sources */,
 				59ECFE1271C44EEA6BE70EA5 /* EcuTuneReader.swift in Sources */,
 				1DE0519DC60F4ED970AFBCE0 /* FTDI.swift in Sources */,
@@ -486,11 +525,13 @@
 				89E8B8C7DCDD8FD337691692 /* LiveEngine.swift in Sources */,
 				2396A6973E6414A1806D2C02 /* LiveView.swift in Sources */,
 				6836090ECA1C4ECC7138B8CA /* LogStore.swift in Sources */,
+				922A436E7518D66DF1B09784 /* LogTable.swift in Sources */,
 				1A220B49A4A62C83358EAB62 /* OpenLinkTunerApp.swift in Sources */,
 				9832D97E45351CCF0DC2AA8A /* PhoneLink.swift in Sources */,
 				350EBE07DD75C5EE1CE191E6 /* PhoneServer.swift in Sources */,
 				4844096503985E1D96E56ED9 /* TableEditor.swift in Sources */,
 				6F74288E66F30D76594D05F7 /* TuneAxes.swift in Sources */,
+				2CE5EF7DB4B7D7EEE11B569B /* TuneCopilot.swift in Sources */,
 				17D995F438C1816969915D32 /* TuneCrypt.swift in Sources */,
 				43E9F985FB66C2C99B7FD63A /* TuneDiff.swift in Sources */,
 				130D0A3CE1F8530940A3B44F /* TuneExport.swift in Sources */,
@@ -513,6 +554,7 @@
 			files = (
 				7EEBDFCD2AFFC158B60C204B /* DashboardView.swift in Sources */,
 				6DCE4F7DF6166472E56A2620 /* LinkClient.swift in Sources */,
+				7A39DF7CAAAD170B66199022 /* LogTable.swift in Sources */,
 				886D5756F5BE07961C490134 /* LogsView.swift in Sources */,
 				501ADC00A32B608C2E15E651 /* OpenLinkMobileApp.swift in Sources */,
 				CCDE96D79D7537C84F67BBF6 /* PhoneLink.swift in Sources */,

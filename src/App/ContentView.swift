@@ -6,13 +6,44 @@ struct ContentView: View {
     @EnvironmentObject var phone: PhoneServer
     @EnvironmentObject var ecu: EcuManager
 
+    @StateObject private var copilot = CopilotStore()
+    @StateObject private var worksheet = AppModel()
+    @SceneStorage("lessonID") private var lessonID = Course.lessons[0].id
+    @AppStorage("courseCompleted.v1") private var passed = ""
+
     var body: some View {
         NavigationSplitView {
-            Sidebar()
-                .navigationSplitViewColumnWidth(min: 270, ideal: 310, max: 460)
+            VStack(alignment: .leading, spacing: 0) {
+                VStack(alignment: .leading, spacing: 2) {
+                    destination("Tune workspace", "slider.horizontal.3", !model.showLearn && !model.showLive && !model.showCopilot) {
+                        model.showLearn = false
+                        model.showLive = false
+                        model.showCopilot = false
+                        model.selectedId = nil
+                    }
+                    destination("Copilot", "sparkles", model.showCopilot && !model.showLearn) {
+                        model.showLearn = false
+                        model.showLive = false
+                        model.showCopilot = true
+                    }
+                    destination("Live data & logs", "waveform.path.ecg", model.showLive && !model.showLearn && !model.showCopilot) {
+                        model.showLearn = false
+                        model.showCopilot = false
+                        model.showLive = true
+                    }
+                    destination("Learn", "book", model.showLearn) { model.showLearn = true }
+                }
+                .padding(10)
+                Divider()
+                if model.showLearn { CourseOutline(selection: $lessonID, passed: passed) }
+                else { Sidebar() }
+            }
+            .navigationSplitViewColumnWidth(min: 252, ideal: 288, max: 420)
         } detail: {
             Group {
-                if model.showLive { LiveView() }
+                if model.showLearn { CourseReader(selection: $lessonID, passed: $passed, worksheet: worksheet) }
+                else if model.showCopilot { CopilotView(store: copilot) }
+                else if model.showLive { LiveView() }
                 else if model.tune == nil { Welcome() }
                 else if let id = model.selectedId, model.tune?.parameter(id) != nil { ParameterPage(id: id).id(id) }
                 else { Overview() }
@@ -22,12 +53,6 @@ struct ContentView: View {
         .navigationTitle(model.fileName.isEmpty ? "OpenLink Tuner" : model.fileName)
         .navigationSubtitle(subtitle)
         .toolbar {
-            ToolbarItemGroup(placement: .navigation) {
-                Button { model.selectedId = nil; model.showLive = false } label: { Label("Overview", systemImage: "square.grid.2x2") }
-                    .help("Tune overview").disabled(model.tune == nil)
-                Button { model.showLive.toggle() } label: { Label("Live", systemImage: "gauge.with.dots.needle.67percent") }
-                    .help("Live data, logging and iPhone link")
-            }
             ToolbarItem(placement: .navigation) { EcuStatusButton() }
             ToolbarItemGroup(placement: .primaryAction) {
                 Button { model.undo() } label: { Label("Undo", systemImage: "arrow.uturn.backward") }
@@ -71,6 +96,18 @@ struct ContentView: View {
         } message: { Text(model.error ?? "") }
     }
 
+    private func destination(_ title: String, _ icon: String, _ active: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Label(title, systemImage: icon)
+                .font(.system(size: 14, weight: active ? .semibold : .regular))
+                .frame(maxWidth: .infinity, alignment: .leading).padding(8)
+                .background(active ? Color.accentColor.opacity(0.16) : .clear, in: RoundedRectangle(cornerRadius: 7))
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(active ? .isSelected : [])
+    }
+
     private var subtitle: String {
         var s: [String] = []
         if model.dirty { s.append("edited — \(model.modifiedIds.count) parameter\(model.modifiedIds.count == 1 ? "" : "s") changed") }
@@ -82,12 +119,16 @@ struct ContentView: View {
 // MARK: - Sidebar
 
 struct Sidebar: View {
+    @State private var browsing = false
     @EnvironmentObject var model: AppModel
 
     var body: some View {
         if let tune = model.tune {
             VStack(spacing: 0) {
                 ecuHeader(tune)
+                Button(browsing ? "Hide parameter browser" : "Browse all parameters") { browsing.toggle() }
+                    .padding(.vertical, 6)
+                if browsing || !model.search.isEmpty || model.filter != .all {
                 filterBar
                 List(selection: $model.selectedId) {
                     if model.filter == .all && model.search.isEmpty && !model.mainTables.isEmpty {
@@ -106,10 +147,19 @@ struct Sidebar: View {
                     }
                 }
                 .listStyle(.sidebar)
+                } else {
+                    List(selection: $model.selectedId) {
+                        Section("Main tables") {
+                            ForEach(model.mainTables.prefix(8), id: \.self) { id in
+                                if let p = tune.parameter(id) { ParamRow(p: p).tag(id) }
+                            }
+                        }
+                    }.listStyle(.sidebar)
+                }
             }
             .searchable(text: $model.search, placement: .sidebar, prompt: "Search parameters")
         } else {
-            Text("No tune open").foregroundStyle(.secondary).frame(maxWidth: .infinity, maxHeight: .infinity)
+            Spacer()
         }
     }
 
@@ -157,7 +207,7 @@ struct GroupSection: View {
 
     var body: some View {
         DisclosureGroup(isExpanded: $isOpen) {
-            ForEach(group.params) { p in ParamRow(p: p).tag(p.dataId) }
+            if isOpen { ForEach(group.params) { p in ParamRow(p: p).tag(p.dataId) } }
         } label: {
             HStack {
                 Label(group.name, systemImage: "folder")
@@ -193,7 +243,7 @@ struct ParamRow: View {
             Image(systemName: icon ?? (p.isTable ? "tablecells" : "slider.horizontal.3"))
                 .foregroundStyle(iconColor ?? (p.isTable ? .orange : .secondary))
                 .frame(width: 16)
-            Text(model.displayName(p)).lineLimit(1)
+            Text(model.displayName(p)).lineLimit(2).help(model.displayName(p))
                 .foregroundStyle(p.readOnly ? .secondary : .primary)
             Spacer(minLength: 4)
             if model.modifiedIds.contains(p.dataId) { Circle().fill(.orange).frame(width: 7, height: 7).help("Edited") }
@@ -218,14 +268,15 @@ struct Welcome: View {
     var body: some View {
         VStack(spacing: 14) {
             Image(systemName: "gauge.with.dots.needle.67percent").font(.system(size: 54)).foregroundStyle(.tint)
-            Text("OpenLink Tuner").font(.largeTitle.bold())
+            Text("Tune workspace").font(.largeTitle.bold())
             Text(ecu.connected ? "ECU connected — read its tune, or open a tune file."
-                               : "Plug in your Link ECU and its tune is read automatically — or open a tune file.")
+                               : "Open a tune file to explore its settings and tables. You can work offline.")
                 .foregroundStyle(.secondary)
             HStack {
+                Button("Open Tune…") { model.openPanel() }.controlSize(.large).buttonStyle(.borderedProminent).keyboardShortcut(.defaultAction)
                 Button("Read Tune from ECU") { ecu.readTune(into: .open) }
                     .controlSize(.large).disabled(!ecu.connected || ecu.reading)
-                Button("Open Tune…") { model.openPanel() }.controlSize(.large).keyboardShortcut(.defaultAction)
+                Button("Start learning") { model.showLearn = true }.controlSize(.large)
             }
             Label(ecu.connected ? "Link cable connected" : "No ECU cable detected",
                   systemImage: ecu.connected ? "cable.connector" : "cable.connector.slash")

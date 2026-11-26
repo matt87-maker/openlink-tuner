@@ -42,15 +42,15 @@ struct NotConnectedView: View {
         VStack(spacing: 14) {
             Image(systemName: "laptopcomputer.and.iphone").font(.system(size: 48)).foregroundStyle(.orange)
             Text(client.connecting ? "Connecting…" : "Not connected to your Mac").font(.title3.bold())
-            Text("Open OpenLink Tuner and make sure this iPhone is on the same Wi-Fi.")
+            Text("To approve this iPhone, open the Mac tab and choose Pair with a Mac. Keep both devices on the same Wi-Fi.")
                 .font(.callout).foregroundStyle(.secondary).multilineTextAlignment(.center)
             if !client.macs.isEmpty {
                 ForEach(client.macs) { m in
-                    Button { client.connect(m) } label: { Label(m.id, systemImage: "desktopcomputer") }
+                    Button { client.connect(m) } label: { Label(m.name, systemImage: "desktopcomputer") }
                         .buttonStyle(.borderedProminent)
                 }
             } else {
-                ProgressView("Looking for Macs…").padding(.top, 6)
+                ProgressView("Looking for approved Macs…").padding(.top, 6)
             }
         }
         .padding(30)
@@ -69,15 +69,24 @@ struct ConnectView: View {
                     LabeledContent("Live source", value: sourceText)
                     if let d = client.hello?.sourceDetail, !d.isEmpty { Text(d).font(.caption).foregroundStyle(.secondary) }
                 }
-                Section("Macs on this network") {
+                Section("Pairing") {
+                    if let pair = client.pendingPair {
+                        Text("On your Mac, open Live. Give this phone a name, enter this private code, then click Approve Phone.")
+                        Text(pair.code).font(.body.monospaced()).textSelection(.enabled)
+                        Button("Cancel Pairing") { client.cancelPairing() }
+                    } else {
+                        Button("Pair with a Mac") { client.beginPairing() }
+                    }
+                }
+                Section("Approved Macs nearby") {
                     if client.macs.isEmpty { Text("Searching…").foregroundStyle(.secondary) }
                     ForEach(client.macs) { m in
                         Button { client.connect(m) } label: {
                             HStack {
                                 Image(systemName: "desktopcomputer")
-                                Text(m.id)
+                                Text(m.name)
                                 Spacer()
-                                if client.connectedMac == m.id { Image(systemName: "checkmark.circle.fill").foregroundStyle(.green) }
+                                if client.connectedMac == m.name { Image(systemName: "checkmark.circle.fill").foregroundStyle(.green) }
                             }
                         }
                     }

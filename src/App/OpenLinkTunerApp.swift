@@ -114,7 +114,7 @@ final class AppModel: ObservableObject {
     @Published var error: String?
     @Published var search = ""
     @Published var dirty = false
-    @Published var selectedId: Int? { didSet { if selectedId != nil { showLive = false } } }
+    @Published var selectedId: Int? { didSet { if selectedId != nil { showLive = false; showCopilot = false } } }
     @Published var hideReadOnly = true
     @Published var filter: SidebarFilter = .all
     @Published var compare: TuneFile?
@@ -123,7 +123,9 @@ final class AppModel: ObservableObject {
     @Published var modifiedIds: Set<Int> = []
     @Published var toast: String?
     @Published var revision = 0
+    @Published var showLearn = false
     @Published var showLive = false
+    @Published var showCopilot = false
     @Published var unreadIds: Set<Int> = []          // settings the ECU read couldn't fetch
     @Published var scaleCheckIds: Set<Int> = []      // read as integers with tune-specific scaling
     @Published var ecuReadSummary: String?
@@ -165,6 +167,18 @@ final class AppModel: ObservableObject {
         }
     }
 
+    /// Course editors own a separate model and never learn an ECU layout.
+    func openWorksheet(_ url: URL) throws {
+        let reference = try TuneFile(fileURL: url)
+        install(try TuneFile(fileURL: url), name: "Practice revision.pclx", url: nil)
+        setCompare(reference, name: "Practice baseline")
+    }
+
+    /// The bundled practice tune, opened as an unsaved copy so Save asks where to keep it.
+    func openPractice() throws {
+        install(try TuneFile(fileURL: try LabAsset.url("Practice baseline", "pclx")), name: "Practice tune.pclx", url: nil)
+    }
+
     /// Show a tune read from the ECU. It isn't a file yet: Save asks where to keep it.
     func openFromECU(_ t: TuneFile, name: String, report: EcuTuneReader.Report) {
         install(t, name: name, url: nil)
@@ -175,6 +189,8 @@ final class AppModel: ObservableObject {
     }
 
     private func install(_ t: TuneFile, name: String, url: URL?) {
+        showLearn = false
+        showLive = false
         tune = t
         fileName = name
         fileURL = url

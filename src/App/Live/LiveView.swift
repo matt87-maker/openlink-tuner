@@ -6,7 +6,14 @@ struct LiveView: View {
     @EnvironmentObject var live: LiveEngine
     @EnvironmentObject var phone: PhoneServer
     @State private var logs: [PhoneLink.LogInfo] = []
+    private struct Recording: Identifiable {
+        let id: String
+        let table: LogTable
+    }
+    @State private var recordingToReview: Recording?
     @State private var showConsole = false
+    @State private var phoneName = ""
+    @State private var pairingCode = ""
     private let cols = [GridItem(.adaptive(minimum: 190), spacing: 10)]
 
     var body: some View {
@@ -22,6 +29,16 @@ struct LiveView: View {
                 logsCard
             }
             .padding(20)
+        }
+        .sheet(item: $recordingToReview) { recording in
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Text(recording.id).font(.title2.bold())
+                    Spacer()
+                    Button("Done") { recordingToReview = nil }
+                }
+                LogInspector(table: recording.table)
+            }.padding(20).frame(width: 680, height: 570)
         }
         .onAppear { logs = live.logs.list() }
         .onChange(of: live.recording) { _, _ in logs = live.logs.list() }
@@ -81,16 +98,26 @@ struct LiveView: View {
     }
 
     private var phoneCard: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "iphone.radiowaves.left.and.right").font(.title).foregroundStyle(.tint)
-            VStack(alignment: .leading, spacing: 2) {
-                Text("iPhone link").font(.headline)
-                Text(phone.state).font(.callout).foregroundStyle(.secondary)
-                Text(phone.clients == 0 ? "No iPhone connected — open OpenLink Mobile on the same Wi-Fi."
-                                        : "\(phone.clients) iPhone\(phone.clients == 1 ? "" : "s") connected")
-                    .font(.caption).foregroundStyle(phone.clients == 0 ? Color.secondary : Color.green)
+        VStack(alignment: .leading, spacing: 8) {
+            Label("Approved phones", systemImage: "lock.iphone").font(.headline)
+            Text("On your iPhone, open Mac → Pair with a Mac. Enter its code here to approve it.")
+                .font(.callout).foregroundStyle(.secondary)
+            HStack {
+                TextField("Phone name", text: $phoneName)
+                SecureField("Pairing code from iPhone", text: $pairingCode)
+                Button("Approve Phone") {
+                    if phone.approve(code: pairingCode, name: phoneName.trimmingCharacters(in: .whitespacesAndNewlines)) {
+                        pairingCode = ""
+                        phoneName = ""
+                    }
+                }
+                .disabled(phoneName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || PhonePair(code: pairingCode, name: "") == nil)
             }
-            Spacer()
+            ForEach(phone.phones) { pair in
+                HStack { Text(pair.name); Spacer(); Button("Revoke") { phone.revoke(pair) } }
+            }
+            Text("\(phone.clients) encrypted connection(s)").font(.caption).foregroundStyle(.secondary)
+            if let error = phone.error { Text(error).foregroundStyle(.red) }
         }
         .padding(12)
         .background(Color.secondary.opacity(0.1), in: RoundedRectangle(cornerRadius: 10))
@@ -112,7 +139,11 @@ struct LiveView: View {
             ForEach(logs) { l in
                 HStack {
                     Image(systemName: "waveform.path.ecg")
-                    Text(l.id).lineLimit(1)
+                    Button(l.id) {
+                        if let csv = live.logs.read(l.id) {
+                            recordingToReview = Recording(id: l.id, table: LogTable(csv: csv))
+                        } else { live.app?.error = "Could not read " + l.id }
+                    }.buttonStyle(.link).lineLimit(1)
                     Spacer()
                     Text("\(Int(l.duration)) s · \(l.samples) samples · \(l.channels.count) channels")
                         .font(.caption).foregroundStyle(.secondary)
