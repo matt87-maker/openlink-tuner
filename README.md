@@ -68,12 +68,27 @@ and ask about your tune. Also JSON and raw decrypted XML.
 
 **Copilot** — a ChatGPT-style tuning assistant in the sidebar. It sees the open tune, the CSV logs
 you attach (+ button or drag & drop) and live ECU data, and talks like a pro tuner. Ask in plain
-words ("fix my fuel from this log", "add 3% fuel above 5000 RPM on boost", "set up launch control");
-it answers and shows each change as a card with a preview. Click **Apply** to put it in the open
-tune (undoable, clamped to each setting's allowed range). Nothing is written to the ECU. Fuel is
-corrected from warm, steady-state lambda across every logged sample. Answers come from your
-OpenAI API key (saved in the Keychain, gear icon) or your ChatGPT account (needs Node.js 22.12+;
-run `bash src/scripts/install-chatgpt-plan.sh` once).
+words ("fix my fuel from this log", "add 3% fuel above 5000 RPM on boost", "pull timing where it
+knocked", "set up launch control"); it answers, draws charts from your logs, and shows each change as
+a card with a preview. Click **Apply** to put it in the open tune (undoable, clamped to each
+setting's allowed range). Nothing is written to the ECU. Chats are saved (clock icon).
+Answers come from your OpenAI API key (saved in the Keychain, gear icon) or your ChatGPT account
+(needs Node.js 22.12+; run `bash src/scripts/install-chatgpt-plan.sh` once).
+
+**Auto-tune from logs** — in a fuel or ignition table, **Auto-tune → Analyse Logs…** shows the
+suggested fuel change in every cell that has data (or the knock count, in ignition tables), and
+**Correct cells** / **Pull 2° where it knocked** applies it, to the whole table or just the selection.
+The analysis uses every sample. It shifts lambda for sensor delay, includes any closed-loop trim the
+ECU was already adding, ignores cold, overrun and throttle-transient samples, and shares each sample
+between the four nearest cells. An automatic tune check flags lean targets on boost, timing rising
+with boost, rough tables, missing dead times and dangerous log readings (lean under boost, knock,
+temperatures, injector duty, oil pressure).
+
+**Tested offline** — `src/Tests/Copilot` contains a simulated engine: a known "true" fuel need, a
+lambda sensor with delay and noise, closed-loop trim, acceleration enrichment, overrun fuel cut,
+a cold start and knock. On real Link tunes, auto-tune brings the fuel table from about 2.5 % RMS error to
+0.3 % in four passes. `src/Tests/CopilotClient` checks streaming and error handling against a mock
+OpenAI server. The commands to run both are at the top of each test file.
 
 <p align="center">
   <img src="screenshots/mac-overview.jpg" width="49%" alt="Tune overview">

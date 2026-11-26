@@ -42,7 +42,7 @@ enum CopilotClient {
             "instructions": instructions,
             "input": messages.map { ["role": $0["role"] ?? "user", "content": $0["content"] ?? ""] },
         ]
-        var request = URLRequest(url: URL(string: "https://api.openai.com/v1/responses")!)
+        var request = URLRequest(url: baseURL.appendingPathComponent("responses"))
         request.httpMethod = "POST"
         request.timeoutInterval = 300
         request.setValue("Bearer " + key, forHTTPHeaderField: "Authorization")
@@ -81,6 +81,12 @@ enum CopilotClient {
         return text
     }
 
+    /// OPENAI_BASE_URL (or the copilot.baseURL default) points at a compatible server, e.g. for tests.
+    static var baseURL: URL {
+        let custom = ProcessInfo.processInfo.environment["OPENAI_BASE_URL"] ?? UserDefaults.standard.string(forKey: "copilot.baseURL")
+        return custom.flatMap(URL.init(string:)) ?? URL(string: "https://api.openai.com/v1")!
+    }
+
     static func failure(status: Int, data: Data) -> CopilotError {
         let error = (try? JSONSerialization.jsonObject(with: data) as? [String: Any])?["error"] as? [String: Any]
         let message = error?["message"] as? String
@@ -92,7 +98,7 @@ enum CopilotClient {
                 return CopilotError("Your OpenAI account is out of API credit. Add credit at platform.openai.com → Billing, or switch to your ChatGPT account in Copilot settings.")
             }
             return CopilotError("OpenAI rate limit reached. Wait a few seconds and resend.")
-        case 404: return CopilotError("OpenAI: " + (message ?? "model not found.") + " Pick another model in Copilot settings.")
+        case 404: return CopilotError("OpenAI: " + (message ?? "model not found") + ". Pick another model in Copilot settings.")
         default: return CopilotError("OpenAI request failed (HTTP \(status))" + (message.map { ": " + $0 } ?? "."))
         }
     }

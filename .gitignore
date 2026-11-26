@@ -24,3 +24,5 @@ src/build/
 
 !src/Resources/CourseLab/*.csv
 !src/Resources/CourseLab/*.pclx
+
+src/Tests/CopilotClient/last_request.json
