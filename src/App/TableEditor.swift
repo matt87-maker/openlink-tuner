@@ -22,7 +22,7 @@ struct TableEditor: View {
     @State private var pctText = "5"
     @FocusState private var gridFocused: Bool
 
-    private let cw: CGFloat = 58, ch: CGFloat = 24, hw: CGFloat = 72, hh: CGFloat = 26
+    private let cw: CGFloat = 68, ch: CGFloat = 30, hw: CGFloat = 84, hh: CGFloat = 34
 
     // MARK: data
 
@@ -174,8 +174,8 @@ struct TableEditor: View {
 
     private var corner: some View {
         VStack(alignment: .trailing, spacing: 0) {
-            Text(axes.x.map { short($0.source) } ?? "").font(.system(size: 9)).foregroundStyle(.secondary)
-            Text(axes.y.map { short($0.source) } ?? "").font(.system(size: 9)).foregroundStyle(.secondary)
+            Text(axes.x.map { short($0.source) } ?? "").font(.system(size: 11)).foregroundStyle(.secondary)
+            Text(axes.y.map { short($0.source) } ?? "").font(.system(size: 11)).foregroundStyle(.secondary)
         }
         .lineLimit(1)
         .frame(width: hw, height: hh, alignment: .trailing)
@@ -195,7 +195,7 @@ struct TableEditor: View {
         let txt = axes.x.map { c < $0.values.count ? TuneExport.num($0.values[c]) : "" } ?? "\(c + 1)"
         let hot = c >= rect.c0 && c <= rect.c1
         return Text(txt)
-            .font(.system(size: 11, weight: .semibold, design: .monospaced))
+            .font(.system(size: 13, weight: .semibold, design: .monospaced))
             .frame(width: cw, height: hh)
             .background(hot ? Color.accentColor.opacity(0.35) : Color.secondary.opacity(0.18))
             .overlay(Rectangle().stroke(Color.black.opacity(0.25), lineWidth: 0.5))
@@ -206,7 +206,7 @@ struct TableEditor: View {
         let txt = axes.y.map { r < $0.values.count ? TuneExport.num($0.values[r]) : "" } ?? "\(r + 1)"
         let hot = r >= rect.r0 && r <= rect.r1
         return Text(txt)
-            .font(.system(size: 11, weight: .semibold, design: .monospaced))
+            .font(.system(size: 13, weight: .semibold, design: .monospaced))
             .frame(width: hw, height: ch, alignment: .trailing)
             .padding(.trailing, 0)
             .background(hot ? Color.accentColor.opacity(0.35) : Color.secondary.opacity(0.18))
@@ -225,7 +225,7 @@ struct TableEditor: View {
         }()
         let unused = r >= (axes.y?.active ?? Int.max) || c >= (axes.x?.active ?? Int.max)
         Text(text)
-            .font(.system(size: 12, design: .monospaced))
+            .font(.system(size: 14, design: .monospaced))
             .frame(width: cw, height: ch)
             .background(cellColor(v, rng))
             .overlay(isSelected(r, c) ? Color.accentColor.opacity(buffer != nil && isCursor ? 0.45 : 0.28) : Color.clear)

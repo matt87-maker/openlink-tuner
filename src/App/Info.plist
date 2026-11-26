@@ -42,13 +42,13 @@
 	<string>public.app-category.utilities</string>
 	<key>NSBonjourServices</key>
 	<array>
-		<string>_openlink._tcp</string>
+		<string>_openlink2._tcp</string>
 	</array>
 	<key>NSHighResolutionCapable</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
 	<string>Open source (MIT). Not affiliated with Link Engine Management Ltd.</string>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>OpenLink Tuner shares live ECU data, logs and your tune with OpenLink Mobile on your iPhone over your local network.</string>
+	<string>OpenLink Tuner uses your local network to share ECU data, logs and tunes with phones you approve on this Mac.</string>
 </dict>
 </plist>

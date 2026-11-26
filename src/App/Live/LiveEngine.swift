@@ -21,6 +21,7 @@ final class LiveEngine: ObservableObject {
     weak var app: AppModel?
     var transportFactory: () throws -> LinkTransport = { try FTDI() }
     let logs = LogStore()
+    private(set) var copilotTelemetry = CopilotTelemetry()
     var onFrame: ((PhoneLink.Frame) -> Void)?
     var onStateChange: (() -> Void)?
 
@@ -60,6 +61,8 @@ final class LiveEngine: ObservableObject {
     }
 
     private func stopSource() {
+        usbGen += 1
+        copilotTelemetry = CopilotTelemetry()
         usbStop = true; usbThread = nil
         connected = false
         if recording { setRecording(false) }
@@ -68,8 +71,12 @@ final class LiveEngine: ObservableObject {
 
     // MARK: ingest
 
-    private func ingest(_ values: [Int: Double]) {
-        let now = Date()
+    private func ingest(_ values: [Int: Double], at now: Date) {
+        let readings = channels.compactMap { channel -> (String, Double)? in
+            guard let value = values[channel.id] else { return nil }
+            return ("\(channel.name) [\(channel.unit)] D\(channel.id)", value)
+        }
+        copilotTelemetry.record(Dictionary(uniqueKeysWithValues: readings), at: now)
         latest = values
         for (k, v) in values {
             var h = history[k] ?? []
@@ -121,7 +128,7 @@ final class LiveEngine: ObservableObject {
                     guard self.usbGen == gen else { return }
                     self.connected = connected
                     self.status = text
-                    if !connected { self.latest = [:]; self.rate = 0 }
+                    if !connected { self.copilotTelemetry = CopilotTelemetry(); self.latest = [:]; self.rate = 0 }
                     self.onStateChange?()
                 }
             }
@@ -200,7 +207,9 @@ final class LiveEngine: ObservableObject {
                     }
                     if vals.isEmpty { emptyCycles += 1 } else {
                         emptyCycles = 0
-                        DispatchQueue.main.async { if self.usbGen == gen { self.ingest(vals) } }
+                        let acquired = Date()
+                        let readings = vals
+                        DispatchQueue.main.async { if self.usbGen == gen { self.ingest(readings, at: acquired) } }
                     }
                     if emptyCycles >= 2 {                   // ECU went quiet (ignition off / power loss)
                         self.say("ECU stopped answering — waiting for it to come back")

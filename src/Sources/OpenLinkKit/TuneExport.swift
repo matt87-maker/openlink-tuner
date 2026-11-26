@@ -4,6 +4,7 @@ import Foundation
 public enum TuneExport {
 
     public struct Options {
+        public var includeIdentity = true
         public var includeReadOnly = false     // runtime values: not tune settings
         public var trimUnusedAxis = true       // drop breakpoints past the configured axis size
         public init() {}
@@ -112,7 +113,7 @@ public enum TuneExport {
     // MARK: full tune → Markdown
 
     public static func markdown(_ tune: TuneFile, catalog: Catalog?, title: String, options: Options = Options()) -> String {
-        var s = header(tune, title: title) + howToRead
+        var s = (options.includeIdentity ? header(tune, title: title) : "# Tune settings\n") + howToRead
         let skip = axisLabelIds(catalog)
         var byCat: [String: [TuneFile.Parameter]] = [:]
         for p in tune.parameters where (options.includeReadOnly || !p.readOnly) && !skip.contains(p.dataId) {

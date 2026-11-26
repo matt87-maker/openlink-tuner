@@ -5,11 +5,12 @@ import SystemConfiguration
 /// Advertises the Mac on the local network (Bonjour) and serves connected iPhones:
 /// live frames, channel list, logs, the open tune, and remote start/stop recording.
 final class PhoneServer: ObservableObject {
-    @Published var state = "Starting…"
-    @Published var clients = 0
-    @Published var port: UInt16 = 0
-
-    private var listener: NWListener?
+    @Published private(set) var phones: [PhonePair] = []
+    @Published private(set) var clients = 0
+    @Published var error: String?
+    private var started = false
+    private var listeners: [String: NWListener] = [:]
+    private var sessions: [ObjectIdentifier: (link: LinkConnection, pairID: String)] = [:]
     private var conns: [ObjectIdentifier: (link: LinkConnection, subscribed: Bool)] = [:]
     private var lastSent = Date.distantPast
     weak var app: AppModel?
@@ -21,41 +22,84 @@ final class PhoneServer: ObservableObject {
     }
 
     func start() {
-        guard listener == nil else { return }
+        guard !started else { return }
         do {
-            let params = NWParameters.tcp
-            params.includePeerToPeer = true
-            let l = try NWListener(using: params)
-            l.service = NWListener.Service(name: macName, type: PhoneLink.serviceType)
-            l.stateUpdateHandler = { [weak self] st in
-                DispatchQueue.main.async {
-                    switch st {
-                    case .ready: self?.state = "Visible to iPhones as “\(self?.macName ?? "Mac")”"; self?.port = l.port?.rawValue ?? 0
-                    case .failed(let e): self?.state = "Network error: \(e)"
-                    case .waiting(let e): self?.state = "Waiting: \(e)"
-                    default: break
-                    }
-                }
-            }
-            l.newConnectionHandler = { [weak self] c in DispatchQueue.main.async { self?.accept(c) } }
-            l.start(queue: .main)
-            listener = l
-        } catch { state = "Couldn't start: \(error)" }
+            phones = try PairStore.load()
+            started = true
+            for pair in phones { listen(for: pair) }
+        } catch { self.error = "Could not load approved phones: " + error.localizedDescription }
     }
 
-    private func accept(_ c: NWConnection) {
-        let link = LinkConnection(c)
+    func approve(code: String, name: String) -> Bool {
+        start()
+        guard started, let pair = PhonePair(code: code, name: name), !name.isEmpty else { return false }
+        do {
+            let updated = phones.filter { $0.id != pair.id } + [pair]
+            try PairStore.save(updated)
+            phones = updated
+            listen(for: pair)
+            return true
+        } catch { self.error = "Could not save approval: " + error.localizedDescription; return false }
+    }
+
+    func revoke(_ pair: PhonePair) {
+        do {
+            let updated = phones.filter { $0.id != pair.id }
+            try PairStore.save(updated)
+            phones = updated
+            listeners.removeValue(forKey: pair.id)?.cancel()
+            for (key, session) in sessions.filter({ $0.value.pairID == pair.id }) {
+                sessions.removeValue(forKey: key)
+                conns.removeValue(forKey: key)
+                session.link.cancel()
+            }
+            clients = conns.count
+        } catch { self.error = "Could not remove approval: " + error.localizedDescription }
+    }
+
+    private func listen(for pair: PhonePair) {
+        guard listeners[pair.id] == nil else { return }
+        do {
+            let listener = try NWListener(using: pair.parameters)
+            listener.service = NWListener.Service(name: pair.id, type: PhoneLink.serviceType)
+            listener.stateUpdateHandler = { [weak self, weak listener] state in
+                guard let self, let listener, self.listeners[pair.id] === listener else { return }
+                if case .failed(let reason) = state {
+                    self.listeners.removeValue(forKey: pair.id)
+                    self.error = "Could not listen for " + pair.name + ": " + reason.localizedDescription
+                }
+            }
+            listener.newConnectionHandler = { [weak self, weak listener] connection in
+                guard let self, let listener, self.listeners[pair.id] === listener else { connection.cancel(); return }
+                self.accept(connection, pairID: pair.id)
+            }
+            listeners[pair.id] = listener
+            listener.start(queue: .main)
+        } catch { self.error = "Could not start encrypted link: " + error.localizedDescription }
+    }
+
+    private func accept(_ connection: NWConnection, pairID: String) {
+        let link = LinkConnection(connection)
         let key = ObjectIdentifier(link)
-        link.onState = { [weak self] st in
-            switch st {
-            case .ready: self?.greet(link)
-            case .failed, .cancelled: self?.conns[key] = nil; self?.clients = self?.conns.count ?? 0
+        sessions[key] = (link, pairID)
+        link.onState = { [weak self, weak link] state in
+            guard let self, let link, self.sessions[key] != nil else { return }
+            switch state {
+            case .ready:
+                self.conns[key] = (link, false)
+                self.greet(link)
+            case .failed, .cancelled:
+                self.sessions.removeValue(forKey: key)
+                self.conns.removeValue(forKey: key)
+                link.cancel()
             default: break
             }
+            self.clients = self.conns.count
         }
-        link.onMessage = { [weak self] m in self?.handle(m, from: link, key: key) }
-        conns[key] = (link, false)
-        clients = conns.count
+        link.onMessage = { [weak self, weak link] message in
+            guard let self, let link, self.conns[key] != nil else { return }
+            self.handle(message, from: link, key: key)
+        }
         link.start()
     }
 
